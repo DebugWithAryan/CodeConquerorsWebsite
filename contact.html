@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeCommunity | Contacts</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: #0a0e17;
+      color: #e0e0ff;
+      min-height: 100vh;
+      width: 100vw;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      position: relative;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: transparent;
+      background-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      text-decoration: none;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      color: #e0e0ff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-link:hover {
+      color: #4facfe;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link.active {
+      color: #4facfe;
+    }
+
+    .nav-link.active::after {
+      width: 100%;
+    }
+    
+    .particles-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .main-content {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .page-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s ease forwards;
+      position: relative;
+      display: inline-block;
+      color: transparent;
+      background-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .contacts-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    
+    .contact-form {
+      background: rgba(18, 24, 38, 0.8);
+      border-radius: 8px;
+      border: 1px solid #2a3a5a;
+      padding: 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeIn 0.8s ease forwards 0.7s;
+    }
+    
+    .form-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: #4facfe;
+      position: relative;
+    }
+    
+    .form-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #a6c1ee;
+    }
+    
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 0.8rem;
+      background: rgba(10, 14, 23, 0.8);
+      border: 1px solid #2a3a5a;
+      border-radius: 4px;
+      color: #e0e0ff;
+      font-family: 'JetBrains Mono', monospace;
+      resize: vertical;
+      transition: all 0.3s ease;
+    }
+    
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: #4facfe;
+      box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+    }
+    
+    .form-textarea {
+      min-height: 120px;
+    }
+    
+    .form-button {
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+      color: #0a0e17;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .form-button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: all 0.4s ease;
+    }
+    
+    .form-button:hover::before {
+      left: 100%;
+    }
+    
+    .form-button:hover {
+      box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+      transform: translateY(-2px);
+    }
+    
+    .contact-info {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeIn 0.8s ease forwards 1s;
+    }
+    
+    .contact-card {
+      background: rgba(18, 24, 38, 0.8);
+      border-radius: 8px;
+      border: 1px solid #2a3a5a;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s ease;
+    }
+    
+    .contact-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .contact-card:hover::before {
+      transform: scaleY(1);
+    }
+    
+    .contact-card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: #4facfe;
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .contact-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 1rem;
+      background: rgba(79, 172, 254, 0.1);
+      border-radius: 50%;
+      color: #4facfe;
+    }
+    
+    .contact-text {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    
+    .contact-text a {
+      color: #e0e0ff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .contact-text a:hover {
+      color: #4facfe;
+    }
+    
+    .social-links {
+      margin-top: 2rem;
+    }
+    
+    .social-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: #4facfe;
+    }
+    
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(79, 172, 254, 0.1);
+      border-radius: 50%;
+      color: #4facfe;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    
+    .social-icon:hover {
+      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+      color: #0a0e17;
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(79, 172, 254, 0.5);
+    }
+
+    .map-container {
+      margin-top: 2rem;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #2a3a5a;
+      height: 250px;
+    }
+    
+    @media (max-width: 768px) {
+      .contacts-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .social-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles-container" id="particles"></div>
+  
+  <header class="header">
+    <a href="index.html" class="logo">CodeCommunity</a>
+    <nav class="nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="projects.html" class="nav-link">Projects</a>
+      <a href="contact.html" class="nav-link active">Contact</a>
+    </nav>
+  </header>
+  
+  <main class="main-content">
+    <h1 class="page-title">Get in Touch</h1>
+    <p class="subtitle">We'd love to hear from you. Send us a message or connect through social media.</p>
+    
+    <div class="contacts-container">
+      <div class="contact-form">
+        <h2 class="form-title">Send Message</h2>
+        <form id="contactForm">
+          <div class="form-group">
+            <label class="form-label" for="name">Name</label>
+            <input type="text" id="name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="email">Email</label>
+            <input type="email" id="email" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="subject">Subject</label>
+            <input type="text" id="subject" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="message">Message</label>
+            <textarea id="message" class="form-textarea" required></textarea>
+          </div>
+          <button type="submit" class="form-button">Send Message →</button>
+        </form>
+      </div>
+      
+      <div class="contact-info">
+        <div class="contact-card">
+          <h3 class="contact-card-title">Contact Information</h3>
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+            </div>
+            <div class="contact-text">+1 (555) 123-4567</div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </div>
+            <div class="contact-text"><a href="mailto:info@codecommunity.com">info@codecommunity.com</a></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </div>
+            <div class="contact-text">123 Coding Street, Tech Valley, CA 94043</div>
+          </div>
+        </div>
+        
+        <div class="social-links">
+          <h3 class="social-title">Follow Us</h3>
+          <div class="social-grid">
+            <a href="#" class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+            </a>
+            <a href="#" class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+              </svg>
+            </a>
+            <a href="#" class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+            <a href="#" class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                <rect x="2" y="9" width="4" height="12"></rect>
+                <circle cx="4" cy="4" r="2"></circle>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="map-container">
+          <!-- Placeholder for map -->
+          <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #121826 25%, #1a2334 25%, #1a2334 50%, #121826 50%, #121826 75%, #1a2334 75%, #1a2334 100%); background-size: 20px 20px; display: flex; justify-content: center; align-items: center;">
+            <span style="color: #4facfe; font-family: 'JetBrains Mono', monospace;">Map Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Create coding particles
+      const particles = document.getElementById('particles');
+      const codeSymbols = ['{', '}', ';', '()', '[]', '<>', '//', '=', '===', '=>', '+=', '&&', '||'];
+      const colors = ['#4facfe', '#00f2fe', '#a6c1ee', '#f08fff', '#0ff0fc'];
+      
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.textContent = codeSymbols[Math.floor(Math.random() * codeSymbols.length)];
+        particle.style.position = 'absolute';
+        particle.style.opacity = (Math.random() * 0.3 + 0.1).toString();
+        particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+        particle.style.fontFamily = 'JetBrains Mono, monospace';
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.top = Math.random() * 100 + 'vh';
+        particle.style.transform = 'rotate(' + (Math.random() * 90 - 45) + 'deg)';
+        particle.style.filter = 'blur(' + (Math.random() * 2) + 'px)';
+        particle.style.zIndex = '2';
+        particle.style.pointerEvents = 'none';
+        particle.style.textShadow = '0 0 5px ' + colors[Math.floor(Math.random() * colors.length)];
+        
+        // Animation
+        const animKeyframes = `
+          @keyframes float${i} {
+            0% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
+            25% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 90 - 45}deg); }
+            50% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 90 - 45}deg); }
+            75% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 90 - 45}deg); }
+            100% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
+          }
+        `;
+        
+        const style = document.createElement('style');
+        style.textContent = animKeyframes;
+        document.head.appendChild(style);
+        
+        particle.style.animation = `float${i} ${Math.random() * 20 + 10}s linear infinite`;
+        
+        particles.appendChild(particle);
+      }
+      
+      // Form submission
+      const contactForm = document.getElementById('contactForm');
+      if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const formButton = this.querySelector('.form-button');
+          const originalText = formButton.textContent;
+          
+          // Show sending state
+          formButton.textContent = 'Sending...';
+          formButton.disabled = true;
+          
+          // Simulate sending (would be replaced with actual fetch/ajax in production)
+          setTimeout(() => {
+            // Reset form
+            contactForm.reset();
+            
+            // Show success message
+            formButton.textContent = 'Message Sent!';
+            formButton.style.background = 'linear-gradient(90deg, #27c93f 0%, #27c93f 100%)';
+            
+            // Reset button after delay
+            setTimeout(() => {
+              formButton.textContent = originalText;
+              formButton.style.background = 'linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%)';
+              formButton.disabled = false;
+            }, 3000);
+          }, 2000);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
