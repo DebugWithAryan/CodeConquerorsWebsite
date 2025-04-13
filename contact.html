@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CodeCommunity | Contacts</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap');
-    
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       font-family: 'Space Grotesk', sans-serif;
       background-color: #0a0e17;
@@ -30,6 +31,20 @@
       padding: 1.5rem 2rem;
       position: relative;
       z-index: 100;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+    }
+
+    .nav-link {
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 2rem;
+      }
     }
 
     .logo {
@@ -83,17 +98,19 @@
     .nav-link.active::after {
       width: 100%;
     }
-    
+
+
     .particles-container {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
       z-index: 1;
+      pointer-events: none;
     }
-    
+
     .main-content {
       padding: 2rem;
       max-width: 1200px;
@@ -101,7 +118,7 @@
       position: relative;
       z-index: 10;
     }
-    
+
     .page-title {
       font-family: 'JetBrains Mono', monospace;
       font-size: 2.5rem;
@@ -116,6 +133,7 @@
       background-clip: text;
       -webkit-background-clip: text;
     }
+
 
     .subtitle {
       font-size: 1.2rem;
@@ -132,13 +150,51 @@
         transform: translateY(0);
       }
     }
-    
+
+
+    /* Cursor following effect */
+    .cursor-follower {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(0, 242, 254, 0.2);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .cursor-ripple {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 242, 254, 0.6);
+      animation: ripple 1.5s ease-out infinite;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0.5);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
     .contacts-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 3rem;
     }
-    
+
     .contact-form {
       background: rgba(18, 24, 38, 0.8);
       border-radius: 8px;
@@ -147,8 +203,16 @@
       opacity: 0;
       transform: translateY(30px);
       animation: fadeIn 0.8s ease forwards 0.7s;
+      transition: all 0.3s ease, box-shadow 0.5s ease;
     }
-    
+
+    .contact-form:hover {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3),
+        0 0 15px rgba(79, 172, 254, 0.4);
+      border-color: rgba(79, 172, 254, 0.5);
+    }
+
+
     .form-title {
       font-family: 'JetBrains Mono', monospace;
       font-size: 1.5rem;
@@ -156,7 +220,7 @@
       color: #4facfe;
       position: relative;
     }
-    
+
     .form-title::after {
       content: '';
       position: absolute;
@@ -166,11 +230,11 @@
       height: 3px;
       background: linear-gradient(90deg, #4facfe, #00f2fe);
     }
-    
+
     .form-group {
       margin-bottom: 1.5rem;
     }
-    
+
     .form-label {
       display: block;
       margin-bottom: 0.5rem;
@@ -178,8 +242,9 @@
       font-size: 0.9rem;
       color: #a6c1ee;
     }
-    
-    .form-input, .form-textarea {
+
+    .form-input,
+    .form-textarea {
       width: 100%;
       padding: 0.8rem;
       background: rgba(10, 14, 23, 0.8);
@@ -190,17 +255,19 @@
       resize: vertical;
       transition: all 0.3s ease;
     }
-    
-    .form-input:focus, .form-textarea:focus {
+
+    .form-input:focus,
+    .form-textarea:focus {
       outline: none;
       border-color: #4facfe;
-      box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+      box-shadow: 0 0 10px rgba(79, 172, 254, 0.3),
+        0 0 20px rgba(0, 242, 254, 0.2);
     }
-    
+
     .form-textarea {
       min-height: 120px;
     }
-    
+
     .form-button {
       font-family: 'JetBrains Mono', monospace;
       background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
@@ -210,12 +277,12 @@
       font-size: 1rem;
       border-radius: 4px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s ease, box-shadow 0.3s ease;
       font-weight: bold;
       position: relative;
       overflow: hidden;
     }
-    
+
     .form-button::before {
       content: "";
       position: absolute;
@@ -226,22 +293,23 @@
       background: rgba(255, 255, 255, 0.2);
       transition: all 0.4s ease;
     }
-    
+
     .form-button:hover::before {
       left: 100%;
     }
-    
+
     .form-button:hover {
-      box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+      box-shadow: 0 0 20px rgba(79, 172, 254, 0.6),
+        0 0 40px rgba(0, 242, 254, 0.3);
       transform: translateY(-2px);
     }
-    
+
     .contact-info {
       opacity: 0;
       transform: translateY(30px);
       animation: fadeIn 0.8s ease forwards 1s;
     }
-    
+
     .contact-card {
       background: rgba(18, 24, 38, 0.8);
       border-radius: 8px;
@@ -250,9 +318,9 @@
       margin-bottom: 2rem;
       position: relative;
       overflow: hidden;
-      transition: all 0.3s ease;
+      transition: all 0.3s ease, box-shadow 0.5s ease;
     }
-    
+
     .contact-card::before {
       content: '';
       position: absolute;
@@ -265,29 +333,34 @@
       transform-origin: top;
       transition: transform 0.3s ease;
     }
-    
+
     .contact-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3),
+        0 0 15px rgba(79, 172, 254, 0.5),
+        0 0 30px rgba(0, 242, 254, 0.3);
+      border-color: rgba(79, 172, 254, 0.6);
     }
-    
+
     .contact-card:hover::before {
       transform: scaleY(1);
     }
-    
+
+
+
     .contact-card-title {
       font-family: 'JetBrains Mono', monospace;
       font-size: 1.3rem;
       margin-bottom: 1rem;
       color: #4facfe;
     }
-    
+
     .contact-item {
       display: flex;
       align-items: center;
       margin-bottom: 1rem;
     }
-    
+
     .contact-icon {
       width: 40px;
       height: 40px;
@@ -298,39 +371,46 @@
       background: rgba(79, 172, 254, 0.1);
       border-radius: 50%;
       color: #4facfe;
+      transition: all 0.3s ease;
     }
-    
+
+    .contact-item:hover .contact-icon {
+      background: rgba(79, 172, 254, 0.2);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+    }
+
     .contact-text {
       font-family: 'Space Grotesk', sans-serif;
     }
-    
+
     .contact-text a {
       color: #e0e0ff;
       text-decoration: none;
       transition: color 0.3s;
     }
-    
+
     .contact-text a:hover {
       color: #4facfe;
+      text-shadow: 0 0 8px rgba(0, 242, 254, 0.7);
     }
-    
+
     .social-links {
       margin-top: 2rem;
     }
-    
+
     .social-title {
       font-family: 'JetBrains Mono', monospace;
       font-size: 1.3rem;
       margin-bottom: 1rem;
       color: #4facfe;
     }
-    
+
     .social-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
     }
-    
+
     .social-icon {
       width: 40px;
       height: 40px;
@@ -340,15 +420,16 @@
       background: rgba(79, 172, 254, 0.1);
       border-radius: 50%;
       color: #4facfe;
-      transition: all 0.3s ease;
+      transition: all 0.3s ease, box-shadow 0.3s ease;
       text-decoration: none;
     }
-    
+
     .social-icon:hover {
       background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
       color: #0a0e17;
       transform: translateY(-5px);
-      box-shadow: 0 5px 15px rgba(79, 172, 254, 0.5);
+      box-shadow: 0 5px 15px rgba(79, 172, 254, 0.5),
+        0 0 20px rgba(0, 242, 254, 0.4);
     }
 
     .map-container {
@@ -357,36 +438,126 @@
       overflow: hidden;
       border: 1px solid #2a3a5a;
       height: 250px;
+      transition: all 0.3s ease;
     }
-    
+
+    .map-container:hover {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3),
+        0 0 15px rgba(79, 172, 254, 0.4);
+      border-color: rgba(79, 172, 254, 0.5);
+    }
+
     @media (max-width: 768px) {
       .contacts-container {
         grid-template-columns: 1fr;
       }
-      
+
       .social-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .header {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+    }
+
+    /* Mobile Navigation styles */
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      z-index: 101;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: #e0e0ff;
+      margin: 5px 0;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: block;
+      }
+
+      .nav {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        width: 70%;
+        height: 100vh;
+        background: rgba(18, 24, 38, 0.95);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: right 0.5s ease;
+        z-index: 100;
+        border-left: 1px solid #2a3a5a;
+        backdrop-filter: blur(10px);
+      }
+
+      .nav.active {
+        right: 0;
+      }
+
+      .nav-link {
+        margin: 1.5rem 0;
+        font-size: 1.2rem;
+      }
+
+      .hamburger.active div:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+        background-color: #4facfe;
+      }
+
+      .hamburger.active div:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active div:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+        background-color: #4facfe;
       }
     }
   </style>
 </head>
+
 <body>
   <div class="particles-container" id="particles"></div>
-  
+
+  <!-- Cursor follower elements -->
+  <div class="cursor-follower" id="cursor-follower">
+    <div class="cursor-ripple"></div>
+  </div>
+
   <header class="header">
-    <a href="index.html" class="logo">CodeCommunity</a>
+    <a href="index.html" class="logo">Code Conquerors</a>
+    <div class="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
     <nav class="nav">
       <a href="index.html" class="nav-link">Home</a>
-      <a href="about.html" class="nav-link">About</a>
+      <a href="about.html" class="nav-link">About Us</a>
+      <a href="team.html" class="nav-link">Teams</a>
       <a href="projects.html" class="nav-link">Projects</a>
-      <a href="contact.html" class="nav-link active">Contact</a>
+      <a href="events.html" class="nav-link">Events</a>
+      <a href="contact.html" class="nav-link active">Contacts</a>
     </nav>
   </header>
-  
+
   <main class="main-content">
     <h1 class="page-title">Get in Touch</h1>
     <p class="subtitle">We'd love to hear from you. Send us a message or connect through social media.</p>
-    
+
     <div class="contacts-container">
       <div class="contact-form">
         <h2 class="form-title">Send Message</h2>
@@ -410,60 +581,72 @@
           <button type="submit" class="form-button">Send Message →</button>
         </form>
       </div>
-      
+
       <div class="contact-info">
         <div class="contact-card">
           <h3 class="contact-card-title">Contact Information</h3>
           <div class="contact-item">
             <div class="contact-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                </path>
               </svg>
             </div>
-            <div class="contact-text">+1 (555) 123-4567</div>
+            <div class="contact-text">+91 7267067176</div>
           </div>
           <div class="contact-item">
             <div class="contact-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                 <polyline points="22,6 12,13 2,6"></polyline>
               </svg>
             </div>
-            <div class="contact-text"><a href="mailto:info@codecommunity.com">info@codecommunity.com</a></div>
+            <div class="contact-text"><a href="mailto:codeconquerors7@gmail.com">codeconquerors7@gmail.com</a></div>
           </div>
           <div class="contact-item">
             <div class="contact-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                 <circle cx="12" cy="10" r="3"></circle>
               </svg>
             </div>
-            <div class="contact-text">123 Coding Street, Tech Valley, CA 94043</div>
+            <div class="contact-text">Jaypee University of Engineering and Technology, Raghogarh, Guna, Madhya Pradesh
+            </div>
           </div>
         </div>
-        
+
         <div class="social-links">
           <h3 class="social-title">Follow Us</h3>
           <div class="social-grid">
             <a href="#" class="social-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
               </svg>
             </a>
             <a href="#" class="social-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                </path>
               </svg>
             </a>
             <a href="#" class="social-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
               </svg>
             </a>
             <a href="#" class="social-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
                 <rect x="2" y="9" width="4" height="12"></rect>
                 <circle cx="4" cy="4" r="2"></circle>
@@ -471,24 +654,25 @@
             </a>
           </div>
         </div>
-        
+
         <div class="map-container">
           <!-- Placeholder for map -->
-          <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #121826 25%, #1a2334 25%, #1a2334 50%, #121826 50%, #121826 75%, #1a2334 75%, #1a2334 100%); background-size: 20px 20px; display: flex; justify-content: center; align-items: center;">
+          <div
+            style="width: 100%; height: 100%; background: linear-gradient(135deg, #121826 25%, #1a2334 25%, #1a2334 50%, #121826 50%, #121826 75%, #1a2334 75%, #1a2334 100%); background-size: 20px 20px; display: flex; justify-content: center; align-items: center;">
             <span style="color: #4facfe; font-family: 'JetBrains Mono', monospace;">Map Loading...</span>
           </div>
         </div>
       </div>
     </div>
   </main>
-  
+
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Create coding particles
       const particles = document.getElementById('particles');
       const codeSymbols = ['{', '}', ';', '()', '[]', '<>', '//', '=', '===', '=>', '+=', '&&', '||'];
       const colors = ['#4facfe', '#00f2fe', '#a6c1ee', '#f08fff', '#0ff0fc'];
-      
+
       for (let i = 0; i < 30; i++) {
         const particle = document.createElement('div');
         particle.textContent = codeSymbols[Math.floor(Math.random() * codeSymbols.length)];
@@ -504,7 +688,7 @@
         particle.style.zIndex = '2';
         particle.style.pointerEvents = 'none';
         particle.style.textShadow = '0 0 5px ' + colors[Math.floor(Math.random() * colors.length)];
-        
+
         // Animation
         const animKeyframes = `
           @keyframes float${i} {
@@ -515,37 +699,50 @@
             100% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
           }
         `;
-        
+
+        // Add to your script after the particles creation
+        window.addEventListener('scroll', () => {
+          const scrollY = window.scrollY;
+
+          // Move particles slightly when scrolling for parallax effect
+          const particlesElements = document.querySelectorAll('#particles > div');
+          particlesElements.forEach((particle, index) => {
+            // Apply different scroll speeds to different particles for layered effect
+            const speed = index % 3 === 0 ? 0.05 : (index % 3 === 1 ? 0.03 : 0.01);
+            particle.style.transform = `translateY(${-scrollY * speed}px) rotate(${particle.dataset.rotation || '0deg'})`;
+          });
+        });
+
         const style = document.createElement('style');
         style.textContent = animKeyframes;
         document.head.appendChild(style);
-        
+
         particle.style.animation = `float${i} ${Math.random() * 20 + 10}s linear infinite`;
-        
+
         particles.appendChild(particle);
       }
-      
+
       // Form submission
       const contactForm = document.getElementById('contactForm');
       if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', function (e) {
           e.preventDefault();
           const formButton = this.querySelector('.form-button');
           const originalText = formButton.textContent;
-          
+
           // Show sending state
           formButton.textContent = 'Sending...';
           formButton.disabled = true;
-          
+
           // Simulate sending (would be replaced with actual fetch/ajax in production)
           setTimeout(() => {
             // Reset form
             contactForm.reset();
-            
+
             // Show success message
             formButton.textContent = 'Message Sent!';
             formButton.style.background = 'linear-gradient(90deg, #27c93f 0%, #27c93f 100%)';
-            
+
             // Reset button after delay
             setTimeout(() => {
               formButton.textContent = originalText;
@@ -556,6 +753,353 @@
         });
       }
     });
+
+    // Cursor follower effect
+    const cursorFollower = document.getElementById('cursor-follower');
+
+    // Enhanced water-like cursor effect
+    document.addEventListener('mousemove', (e) => {
+      // Show the cursor follower when mouse moves
+      if (cursorFollower.style.opacity === '0') {
+        cursorFollower.style.opacity = '1';
+      }
+
+      // Position the follower with slight delay for water-like effect
+      setTimeout(() => {
+        cursorFollower.style.left = e.clientX + 'px';
+        cursorFollower.style.top = e.clientY + 'px';
+
+        // Add more pronounced water-like distortion effect on movement
+        const distortionFactor = Math.sin(Date.now() / 300) * 0.3;
+        const pulseSize = 1 + Math.sin(Date.now() / 500) * 0.2;
+
+        cursorFollower.style.transform = `translate(-50%, -50%) scale(${pulseSize}) skew(${distortionFactor}deg, ${distortionFactor}deg)`;
+
+        // Add subtle glow color change
+        const hue = (Date.now() / 50) % 360;
+        cursorFollower.style.boxShadow = `0 0 15px rgba(${Math.sin(hue) * 30 + 70}, ${Math.sin(hue + 2) * 30 + 210}, ${Math.sin(hue + 4) * 30 + 254}, 0.6)`;
+      }, 80);
+
+      // Create ripple effect on mouse movement sometimes
+      if (Math.random() > 0.97) {
+        const ripple = document.createElement('div');
+        ripple.className = 'cursor-ripple';
+        ripple.style.left = e.clientX + 'px';
+        ripple.style.top = e.clientY + 'px';
+        ripple.style.transform = 'translate(-50%, -50%)';
+        document.body.appendChild(ripple);
+
+        // Remove ripple after animation completes
+        setTimeout(() => {
+          ripple.remove();
+        }, 1500);
+      }
+    });
+
+
+
+    const hamburger = document.querySelector('.hamburger');
+    const nav = document.querySelector('.nav');
+
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        nav.classList.toggle('active');
+      });
+
+      // Close menu when link is clicked
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          nav.classList.remove('active');
+        });
+      });
+    }
+
+    // Map implementation for the Contacts page
+    // Add this script to your existing JavaScript or include it in a separate file
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Initialize the map after the page has loaded
+      initMap();
+
+      // Form submission code and other existing scripts...
+      setupFormSubmission();
+
+    });
+
+    // Function to initialize the Google Maps
+    function initMap() {
+      // JUET Guna coordinates
+      const latitude = 24.435233392749943
+      const longitude = 77.16120956080681
+
+
+      const juetLocation = {
+        lat: latitude,
+        lng: longitude
+      };
+
+      // Get the map container element
+      const mapContainer = document.querySelector('.map-container');
+
+      // Check if Google Maps API is loaded
+      if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+        // If Google Maps API is not loaded, load it dynamically
+        loadGoogleMapsAPI().then(() => {
+          createMap(juetLocation, mapContainer);
+        }).catch(error => {
+          console.error('Failed to load Google Maps API:', error);
+          showMapError(mapContainer);
+        });
+      } else {
+        // If Google Maps API is already loaded, create the map
+        createMap(juetLocation, mapContainer);
+      }
+    }
+
+    // Function to load Google Maps API dynamically
+    function loadGoogleMapsAPI() {
+      return new Promise((resolve, reject) => {
+        // Create script element
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCYrX9yYsffXGaBy80JMUz0z-pt9yrMwjI&callback=googleMapsCallback';
+        script.async = true;
+        script.defer = true;
+
+        // Add global callback function
+        window.googleMapsCallback = function () {
+          resolve();
+        };
+
+        // Handle loading errors
+        script.onerror = function () {
+          reject(new Error('Google Maps API failed to load'));
+        };
+
+        // Add script to the document
+        document.head.appendChild(script);
+      });
+    }
+
+    // Function to create the map
+    function createMap(location, container) {
+      // Clear the container
+      container.innerHTML = '';
+
+      // Create a div for the map
+      const mapDiv = document.createElement('div');
+      mapDiv.style.width = '100%';
+      mapDiv.style.height = '100%';
+      container.appendChild(mapDiv);
+
+      // Create map instance
+      const map = new google.maps.Map(mapDiv, {
+        center: location,
+        zoom: 15,
+        styles: [
+          // Dark mode style for the map - matches your site's theme
+          {
+            "elementType": "geometry",
+            "stylers": [{ "color": "#1a2334" }]
+          },
+          {
+            "elementType": "labels.text.stroke",
+            "stylers": [{ "color": "#121826" }]
+          },
+          {
+            "elementType": "labels.text.fill",
+            "stylers": [{ "color": "#a6c1ee" }]
+          },
+          {
+            "featureType": "administrative.locality",
+            "elementType": "labels.text.fill",
+            "stylers": [{ "color": "#4facfe" }]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{ "color": "#2a3a5a" }]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels.text.fill",
+            "stylers": [{ "color": "#e0e0ff" }]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{ "color": "#080c14" }]
+          }
+        ]
+      });
+
+      // Add marker for JUET
+      const marker = new google.maps.Marker({
+        position: location,
+        map: map,
+        title: 'Jaypee University of Engineering and Technology, Guna',
+        animation: google.maps.Animation.DROP
+      });
+
+      // Add info window with details
+      const infoContent = `
+    <div style="color: #0a0e17; font-family: 'Space Grotesk', sans-serif; padding: 10px">
+      <h3 style="font-family: 'JetBrains Mono', monospace; margin: 0 0 5px; color: #4facfe;">JUET Guna</h3>
+      <p style="margin: 0 0 5px;">Jaypee University of Engineering and Technology</p>
+      <p style="margin: 0 0 5px;">A.B. Road, Raghogarh, Guna - 473226</p>
+      <p style="margin: 0;">Madhya Pradesh, India</p>
+    </div>
+  `;
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: infoContent
+      });
+
+      // Open info window when marker is clicked
+      marker.addListener('click', () => {
+        infoWindow.open(map, marker);
+      });
+
+      // Open info window by default
+      infoWindow.open(map, marker);
+    }
+
+    // Function to show an error message if map loading fails
+    function showMapError(container) {
+      container.innerHTML = `
+    <div style="width: 100%; height: 100%; background: rgba(18, 24, 38, 0.8); display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px; text-align: center;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#4facfe" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span style="color: #4facfe; font-family: 'JetBrains Mono', monospace; margin-top: 10px;">Unable to load map</span>
+      <p style="color: #e0e0ff; font-family: 'Space Grotesk', sans-serif; margin-top: 10px;">
+        Visit us at: Jaypee University of Engineering and Technology, A.B. Road, Raghogarh, Guna - 473226, Madhya Pradesh, India
+      </p>
+    </div>
+  `;
+    }
+
+    // Function to setup form submission using FormSubmit service
+    function setupFormSubmission() {
+      const contactForm = document.getElementById('contact-form');
+
+      if (contactForm) {
+        // Make sure the form has the correct attributes for FormSubmit service
+        contactForm.setAttribute('action', 'https://formsubmit.co/codeconquerors7@gmail.com');
+        contactForm.setAttribute('method', 'POST');
+
+        // Add hidden fields required by FormSubmit
+        const hiddenFields = [
+          { name: '_subject', value: 'New Contact Form Submission' },
+          { name: '_captcha', value: 'false' },  // Disable captcha if needed
+          { name: '_template', value: 'table' }, // Use table template for better formatting
+          { name: '_next', value: window.location.href } // Redirect back to the same page after submission
+        ];
+
+        hiddenFields.forEach(field => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = field.name;
+          input.value = field.value;
+          contactForm.appendChild(input);
+        });
+
+        // Add form submission handling
+        contactForm.addEventListener('submit', function (event) {
+          // Don't prevent default as we want the form to submit naturally
+
+          // Show loading state
+          const submitButton = contactForm.querySelector('button[type="submit"]');
+          if (submitButton) {
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+
+            // Store original text to restore after submission
+            localStorage.setItem('buttonText', originalButtonText);
+          }
+
+          // Set a flag to show success message when the page reloads
+          localStorage.setItem('formSubmitted', 'true');
+        });
+
+        // Check if we need to show a success message (after form submission and redirect)
+        if (localStorage.getItem('formSubmitted') === 'true') {
+          // Show success message
+          showNotification('Message sent successfully!', 'success');
+
+          // Reset the flag
+          localStorage.removeItem('formSubmitted');
+
+          // Restore button text if needed
+          const submitButton = contactForm.querySelector('button[type="submit"]');
+          if (submitButton) {
+            const originalButtonText = localStorage.getItem('buttonText') || 'Submit';
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+            localStorage.removeItem('buttonText');
+          }
+        }
+      }
+    }
+
+    // Function to show notification
+    function showNotification(message, type) {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+
+      // Style notification
+      notification.style.position = 'fixed';
+      notification.style.bottom = '20px';
+      notification.style.right = '20px';
+      notification.style.padding = '15px 20px';
+      notification.style.borderRadius = '4px';
+      notification.style.fontFamily = "'Space Grotesk', sans-serif";
+      notification.style.zIndex = '1000';
+      notification.style.animation = 'fadeIn 0.3s ease-out';
+
+      if (type === 'success') {
+        notification.style.backgroundColor = '#4facfe';
+        notification.style.color = '#ffffff';
+      } else {
+        notification.style.backgroundColor = '#fe4a49';
+        notification.style.color = '#ffffff';
+      }
+
+      // Add notification to document
+      document.body.appendChild(notification);
+
+      // Remove notification after 5 seconds
+      setTimeout(() => {
+        notification.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 5000);
+    }
+
+    // Add CSS for animations
+    function addAnimationStyles() {
+      const style = document.createElement('style');
+      style.textContent = `
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(10px); }
+    }
+  `;
+      document.head.appendChild(style);
+    }
+
   </script>
 </body>
+
 </html>

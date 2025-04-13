@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CodeCommunity | Welcome to the Codeverse</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap');
-    
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       font-family: 'Space Grotesk', sans-serif;
       background-color: #0a0e17;
@@ -25,23 +26,24 @@
       align-items: center;
       position: relative;
     }
-    
+
     .container {
       text-align: center;
       z-index: 10;
       padding: 2rem;
       max-width: 980px;
-      background-color: rgba(10, 14, 23, 0.7); /* Semi-transparent background to make text more readable */
+      background-color: rgba(10, 14, 23, 0.7);
+      /* Semi-transparent background to make text more readable */
       border-radius: 8px;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
       position: relative;
     }
-    
+
     .logo-container {
       margin-bottom: 2rem;
       height: 80px;
     }
-    
+
     .logo {
       font-family: 'JetBrains Mono', monospace;
       font-size: 3rem;
@@ -53,7 +55,7 @@
       position: relative;
       display: inline-block;
     }
-    
+
     .logo::after {
       content: "";
       position: absolute;
@@ -64,12 +66,19 @@
       background: #4facfe;
       animation: cursor-blink 1.2s infinite;
     }
-    
+
     @keyframes cursor-blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
     }
-    
+
     .tagline {
       font-size: 1.5rem;
       margin-bottom: 3rem;
@@ -78,7 +87,7 @@
       animation: fadeIn 2s ease forwards;
       animation-delay: 2s;
     }
-    
+
     .cta-button {
       font-family: 'JetBrains Mono', monospace;
       background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
@@ -97,7 +106,7 @@
       position: relative;
       overflow: hidden;
     }
-    
+
     .cta-button::before {
       content: "";
       position: absolute;
@@ -108,11 +117,11 @@
       background: rgba(255, 255, 255, 0.2);
       transition: all 0.4s ease;
     }
-    
+
     .cta-button:hover::before {
       left: 100%;
     }
-    
+
     .cta-button:hover {
       box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
       transform: translateY(-2px);
@@ -124,7 +133,7 @@
         transform: translateY(0);
       }
     }
-    
+
     .particles-container {
       position: absolute;
       top: 0;
@@ -134,7 +143,7 @@
       overflow: hidden;
       z-index: 1;
     }
-    
+
     .terminal {
       position: absolute;
       width: 300px;
@@ -151,7 +160,7 @@
       opacity: 0;
       box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
     }
-    
+
     .terminal-header {
       display: flex;
       align-items: center;
@@ -159,54 +168,62 @@
       border-bottom: 1px solid #2a3a5a;
       padding-bottom: 5px;
     }
-    
+
     .terminal-circle {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       margin-right: 5px;
     }
-    
-    .terminal-red { background-color: #ff5f56; }
-    .terminal-yellow { background-color: #ffbd2e; }
-    .terminal-green { background-color: #27c93f; }
-    
+
+    .terminal-red {
+      background-color: #ff5f56;
+    }
+
+    .terminal-yellow {
+      background-color: #ffbd2e;
+    }
+
+    .terminal-green {
+      background-color: #27c93f;
+    }
+
     .terminal-title {
       margin-left: 10px;
       font-size: 0.7rem;
       color: #6c7a94;
     }
-    
+
     .terminal-content {
       font-size: 0.7rem;
       line-height: 1.4;
       white-space: pre-wrap;
     }
-    
+
     .code-line {
       display: block;
       opacity: 0;
     }
-    
+
     .terminal-path {
       color: #4facfe;
       margin-right: 5px;
     }
-    
+
     .terminal-prompt {
       color: #a6c1ee;
       margin-right: 5px;
     }
-    
+
     .terminal-command {
       color: #e0e0ff;
     }
-    
+
     .terminal-response {
       color: #91ff91;
       padding-left: 15px;
     }
-    
+
     .tech-icon {
       position: absolute;
       width: 40px;
@@ -216,7 +233,7 @@
       filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
       transform-origin: center center;
     }
-    
+
     .loading-bar {
       position: absolute;
       height: 2px;
@@ -228,7 +245,7 @@
       box-shadow: 0 0 10px rgba(0, 242, 254, 0.7);
       z-index: 2;
     }
-    
+
     /* Cursor following effect */
     .cursor-follower {
       position: absolute;
@@ -244,7 +261,7 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-    
+
     .cursor-ripple {
       position: absolute;
       width: 100%;
@@ -253,81 +270,181 @@
       border: 2px solid rgba(0, 242, 254, 0.6);
       animation: ripple 1.5s ease-out infinite;
     }
-    
+
     @keyframes ripple {
       0% {
         transform: scale(0.5);
         opacity: 1;
       }
+
       100% {
         transform: scale(2);
         opacity: 0;
       }
     }
-    
+
     @media (max-width: 768px) {
       .logo {
         font-size: 2.5rem;
       }
-      
+
       .tagline {
         font-size: 1.2rem;
       }
-      
+
       .terminal {
         width: 250px;
         height: 180px;
       }
-      
+
       .cta-button {
         padding: 0.8rem 1.5rem;
         font-size: 1rem;
       }
     }
-    
+
     @media (max-width: 480px) {
       .logo {
         font-size: 2rem;
       }
-      
+
       .tagline {
         font-size: 1rem;
       }
-      
+
       .terminal {
         display: none;
       }
     }
+
+    /* Add these styles to your existing CSS section */
+
+    /* Swipe transition effects */
+    .swipe-transition-container,
+    .entry-animation-container {
+      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .swipe-layer,
+    .entry-layer {
+      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Add blur effect during transition */
+    .swipe-transition-container.active~* {
+      filter: blur(5px);
+      transition: filter 0.5s ease;
+    }
+
+    /* Ensure content doesn't jump during transitions */
+    html,
+    body {
+      overflow-x: hidden;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Enhance link hover effects */
+    a,
+    button {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    a:hover,
+    button:hover {
+      text-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+    }
+
+    /* Page loading animation */
+    @keyframes pageLoad {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container {
+      animation: pageLoad 0.8s ease-out;
+    }
+
+    /* Enhanced cursor ripple effect */
+    .cursor-ripple {
+      will-change: transform, opacity;
+    }
+
+
+    /* Add a swipe hint effect to interactive elements */
+    .cta-button:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -10%;
+      width: 5%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: skewX(-20deg);
+      animation: swipeHint 3s ease-in-out infinite;
+    }
+
+    @keyframes swipeHint {
+
+      0%,
+      100% {
+        left: -10%;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 0.7;
+      }
+
+      40% {
+        left: 110%;
+        opacity: 0;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="particles-container" id="particles"></div>
-  
+
   <!-- Cursor follower elements -->
   <div class="cursor-follower" id="cursor-follower">
     <div class="cursor-ripple"></div>
   </div>
-  
+
   <div class="container">
     <div class="logo-container">
       <h1 class="logo" id="logo"></h1>
     </div>
     <p class="tagline">Welcome to the world of creators, builders & problem-solvers</p>
-    <button class="cta-button">Enter the Codeverse →</button>
+    <button class="cta-button">Enter the Codeverse</button>
   </div>
-  
+
   <!-- Loading bars -->
   <div class="loading-bar" id="loading-bar-1"></div>
   <div class="loading-bar" id="loading-bar-2" style="top: 92%; left: 35%; width: 0%;"></div>
-  
+
   <!-- Script -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Logo typing effect
       const logo = document.getElementById('logo');
-      const logoText = "CodeCommunity";
+      const logoText = "Code Conquerors";
       let i = 0;
-      
+
       function typeWriter() {
         if (i < logoText.length) {
           logo.textContent += logoText.charAt(i);
@@ -338,12 +455,12 @@
           setTimeout(glitchEffect, 500);
         }
       }
-      
+
       function glitchEffect() {
         logo.style.animation = "none";
         logo.offsetHeight; // Trigger reflow
         logo.style.animation = "glitch 0.5s ease";
-        
+
         // Add glitch keyframes dynamically
         const style = document.createElement('style');
         style.textContent = `
@@ -358,14 +475,14 @@
         `;
         document.head.appendChild(style);
       }
-      
+
       setTimeout(typeWriter, 500);
-      
+
       // Create coding particles
       const particles = document.getElementById('particles');
       const codeSymbols = ['{', '}', ';', '()', '[]', '<>', '//', '=', '===', '=>', '+=', '&&', '||'];
       const colors = ['#4facfe', '#00f2fe', '#a6c1ee', '#f08fff', '#0ff0fc'];
-      
+
       for (let i = 0; i < 40; i++) {
         const particle = document.createElement('div');
         particle.textContent = codeSymbols[Math.floor(Math.random() * codeSymbols.length)];
@@ -381,13 +498,13 @@
         particle.style.zIndex = '2';
         particle.style.pointerEvents = 'none';
         particle.style.textShadow = '0 0 5px ' + colors[Math.floor(Math.random() * colors.length)];
-        
+
         // Animation
         particle.style.transition = 'all ' + (Math.random() * 5 + 10) + 's linear';
         particle.style.animationDuration = (Math.random() * 20 + 10) + 's';
         particle.style.animationTimingFunction = 'linear';
         particle.style.animationIterationCount = 'infinite';
-        
+
         const animKeyframes = `
           @keyframes float${i} {
             0% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
@@ -397,111 +514,17 @@
             100% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
           }
         `;
-        
+
         const style = document.createElement('style');
         style.textContent = animKeyframes;
         document.head.appendChild(style);
-        
+
         particle.style.animation = `float${i} ${Math.random() * 20 + 10}s linear infinite`;
-        
+
         particles.appendChild(particle);
       }
-      
-      // Create Terminal Windows
-      const terminalContents = [
-        {
-          title: "community.js",
-          content: [
-            '<span class="terminal-path">~/codeverse $</span> <span class="terminal-command">npm init code-community</span>',
-            '<span class="terminal-response">Creating modern coding environment...</span>',
-            '<span class="terminal-response">Connecting developers...</span>',
-            '<span class="terminal-response">Building community...</span>',
-            '<span class="terminal-path">~/codeverse $</span> <span class="terminal-command">_</span>'
-          ]
-        },
-        {
-          title: "hack.py",
-          content: [
-            '<span class="terminal-path">~/projects $</span> <span class="terminal-command">python hack.py</span>',
-            '<span class="terminal-response">def solve_problem(challenge):</span>',
-            '<span class="terminal-response">    solution = think_creatively(challenge)</span>',
-            '<span class="terminal-response">    return collaborate(solution)</span>',
-            '<span class="terminal-response">Running problem solver...</span>'
-          ]
-        }
-      ];
-      
-      // Get viewport dimensions for better positioning
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      
-      for (let i = 0; i < terminalContents.length; i++) {
-        const terminal = document.createElement('div');
-        terminal.className = 'terminal';
-        terminal.innerHTML = `
-          <div class="terminal-header">
-            <span class="terminal-circle terminal-red"></span>
-            <span class="terminal-circle terminal-yellow"></span>
-            <span class="terminal-circle terminal-green"></span>
-            <span class="terminal-title">${terminalContents[i].title}</span>
-          </div>
-          <div class="terminal-content">
-            ${terminalContents[i].content.map(line => `<span class="code-line">${line}</span>`).join('')}
-          </div>
-        `;
-        
-        // Position terminals to not overlap with central content
-        const container = document.querySelector('.container');
-        const containerRect = container.getBoundingClientRect();
-        const containerMargin = 40; // Extra margin to ensure no overlap
-    
-        if (i === 0) {
-          // First terminal - position to the left, ensure no overlap
-          const leftPosition = Math.max(20, containerRect.left - 320 - containerMargin);
-          terminal.style.left = leftPosition + 'px';
-          terminal.style.top = '20%';
-        } else {
-          // Second terminal - position to the right, ensure no overlap
-          const rightPosition = Math.min(viewportWidth - 320, containerRect.right + containerMargin);
-          terminal.style.left = rightPosition + 'px';
-          terminal.style.top = '65%';
-        }
-    
-        // Add additional check for small screens
-        if (viewportWidth < 1200) {
-          // On smaller screens, move terminals to top and bottom instead
-          if (i === 0) {
-            terminal.style.left = '50%';
-            terminal.style.top = '10%';
-            terminal.style.transform = 'translateX(-50%)';
-          } else {
-            terminal.style.left = '50%';
-            terminal.style.top = '80%';
-            terminal.style.transform = 'translateX(-50%)';
-          }
-        }
-        
-        // Set the initial opacity to 0
-        terminal.style.opacity = '0';
-        // Add the terminal to the document
-        document.body.appendChild(terminal);
-        
-        // Fade in the terminal with a delay based on its index
-        setTimeout(() => {
-          terminal.style.transition = 'opacity 1s ease, transform 0.5s ease';
-          terminal.style.opacity = '1';
-          
-          // Animate terminal code lines one by one
-          const codeLines = terminal.querySelectorAll('.code-line');
-          codeLines.forEach((line, lineIndex) => {
-            setTimeout(() => {
-              line.style.transition = 'opacity 0.3s ease';
-              line.style.opacity = '1';
-            }, 500 + lineIndex * 400);  // Staggered delay for each line
-          });
-        }, 2000 + i * 800);  // Staggered delay for each terminal
-      }
-      
+
+      <!-- Tech icons -->
       // Tech icon orbits - FIXED consistent speed approach
       const techIcons = [
         { name: 'GitHub', svg: '<svg viewBox="0 0 24 24"><path fill="#ffffff" d="M12 0a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.8-1.3-1.8-1.2-.7 0-.7 0-.7 1.2 0 1.9 1.2 1.9 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.1-.4-.6-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.9 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 0z"/></svg>' },
@@ -510,7 +533,7 @@
         { name: 'HTML', svg: '<svg viewBox="0 0 24 24"><path fill="#E34F26" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531V9.75z"/></svg>' },
         { name: 'CSS', svg: '<svg viewBox="0 0 24 24"><path fill="#1572B6" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414v-.001z"/></svg>' }
       ];
-      
+
       // Create a container for the tech icons
       const iconContainer = document.createElement('div');
       iconContainer.style.position = 'absolute';
@@ -521,22 +544,22 @@
       iconContainer.style.zIndex = '2';
       iconContainer.style.pointerEvents = 'none';
       document.body.appendChild(iconContainer);
-      
+
       // Fixed orbit animation duration for all icons - ensures consistent speed
       const orbitDuration = 20; // seconds for a complete orbit
-      
+
       for (let i = 0; i < techIcons.length; i++) {
         const icon = document.createElement('div');
         icon.className = 'tech-icon';
         icon.innerHTML = techIcons[i].svg;
-        
+
         // Calculate initial position on the orbit
         const angle = (i / techIcons.length) * 2 * Math.PI;
         const radius = Math.min(window.innerWidth, window.innerHeight) * 0.3;
-        
+
         icon.style.left = '50%';
         icon.style.top = '50%';
-        
+
         // Create a single consistent orbit animation for all icons
         // They just start at different positions
         const orbitKeyframes = `
@@ -555,72 +578,71 @@
             }
           }
         `;
-        
+
         const style = document.createElement('style');
         style.textContent = orbitKeyframes;
         document.head.appendChild(style);
-        
+
         // Apply the same orbit duration to all icons
         icon.style.animation = `orbit${i} ${orbitDuration}s linear infinite ${i * 0.5 + 3}s`;
-        
+
         iconContainer.appendChild(icon);
       }
-      
+
       // Animate loading bars
       const loadingBar1 = document.getElementById('loading-bar-1');
       const loadingBar2 = document.getElementById('loading-bar-2');
-      
+
       setTimeout(() => {
         loadingBar1.style.transition = 'width 8s linear';
         loadingBar1.style.width = '50%';
-        
+
         setTimeout(() => {
           loadingBar2.style.transition = 'width 6s linear';
           loadingBar2.style.width = '40%';
         }, 1000);
       }, 3000);
-      
+
       // Add click animation to CTA button
       const ctaButton = document.querySelector('.cta-button');
-      ctaButton.addEventListener('click', function() {
+      ctaButton.addEventListener('click', function () {
         this.style.transform = 'scale(0.95)';
         setTimeout(() => {
           this.style.transform = 'translateY(-2px)';
         }, 150);
-        
+
         // You can add your page transition here
         setTimeout(() => {
           window.location.href = 'about.html';
         }, 300);
       });
-      
+
       // Cursor follower effect
       const cursorFollower = document.getElementById('cursor-follower');
-      
-      // Add event listener to track mouse movement
+
       // Enhanced water-like cursor effect
       document.addEventListener('mousemove', (e) => {
         // Show the cursor follower when mouse moves
         if (cursorFollower.style.opacity === '0') {
           cursorFollower.style.opacity = '1';
         }
-        
+
         // Position the follower with slight delay for water-like effect
         setTimeout(() => {
           cursorFollower.style.left = e.clientX + 'px';
           cursorFollower.style.top = e.clientY + 'px';
-          
+
           // Add more pronounced water-like distortion effect on movement
           const distortionFactor = Math.sin(Date.now() / 300) * 0.3;
           const pulseSize = 1 + Math.sin(Date.now() / 500) * 0.2;
-          
+
           cursorFollower.style.transform = `translate(-50%, -50%) scale(${pulseSize}) skew(${distortionFactor}deg, ${distortionFactor}deg)`;
-          
+
           // Add subtle glow color change
           const hue = (Date.now() / 50) % 360;
           cursorFollower.style.boxShadow = `0 0 15px rgba(${Math.sin(hue) * 30 + 70}, ${Math.sin(hue + 2) * 30 + 210}, ${Math.sin(hue + 4) * 30 + 254}, 0.6)`;
         }, 80);
-        
+
         // Create ripple effect on mouse movement sometimes
         if (Math.random() > 0.97) {
           const ripple = document.createElement('div');
@@ -629,37 +651,255 @@
           ripple.style.top = e.clientY + 'px';
           ripple.style.transform = 'translate(-50%, -50%)';
           document.body.appendChild(ripple);
-          
+
           // Remove ripple after animation completes
           setTimeout(() => {
             ripple.remove();
           }, 1500);
         }
       });
-      
+
+
+      // Create and set up the swipe blend transition
+      const setupSwipeBlendTransition = () => {
+        // Create transition elements
+        const transitionContainer = document.createElement('div');
+        transitionContainer.className = 'swipe-transition-container';
+        transitionContainer.style.position = 'fixed';
+        transitionContainer.style.top = '0';
+        transitionContainer.style.left = '0';
+        transitionContainer.style.width = '100vw';
+        transitionContainer.style.height = '100vh';
+        transitionContainer.style.zIndex = '9999';
+        transitionContainer.style.pointerEvents = 'none';
+        transitionContainer.style.display = 'none';
+        document.body.appendChild(transitionContainer);
+
+        // Create multiple swipe layers for the blend effect
+        const colors = ['#4facfe', '#00f2fe', '#0a0e17', '#a6c1ee'];
+        const layers = [];
+
+        // Create each blend layer
+        for (let i = 0; i < colors.length; i++) {
+          const layer = document.createElement('div');
+          layer.className = 'swipe-layer';
+          layer.style.position = 'absolute';
+          layer.style.top = '0';
+          layer.style.width = '100%';
+          layer.style.height = '100%';
+          layer.style.backgroundColor = colors[i];
+          layer.style.transform = 'translateX(-100%)';
+          layer.style.opacity = i === 2 ? '0.95' : '0.7'; // Main dark layer is more opaque
+          layer.style.mixBlendMode = i === 2 ? 'normal' : 'color-dodge';
+          layer.style.transition = `transform 0.8s cubic-bezier(0.7, 0, 0.3, 1) ${i * 0.08}s`;
+          transitionContainer.appendChild(layer);
+          layers.push(layer);
+        }
+
+        // Create transition content (logo and particles)
+        const transitionContent = document.createElement('div');
+        transitionContent.className = 'transition-content';
+        transitionContent.style.position = 'absolute';
+        transitionContent.style.top = '0';
+        transitionContent.style.left = '0';
+        transitionContent.style.width = '100%';
+        transitionContent.style.height = '100%';
+        transitionContent.style.display = 'flex';
+        transitionContent.style.alignItems = 'center';
+        transitionContent.style.justifyContent = 'center';
+        transitionContent.style.zIndex = '1';
+        transitionContent.style.opacity = '0';
+        transitionContent.style.transition = 'opacity 0.4s ease 0.3s';
+        transitionContainer.appendChild(transitionContent);
+
+        // Add logo to transition
+        const transitionLogo = document.createElement('h1');
+        transitionLogo.textContent = "CodeCommunity";
+        transitionLogo.style.fontFamily = "'JetBrains Mono', monospace";
+        transitionLogo.style.fontSize = '3rem';
+        transitionLogo.style.fontWeight = '700';
+        transitionLogo.style.color = 'transparent';
+        transitionLogo.style.backgroundImage = 'linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%)';
+        transitionLogo.style.backgroundClip = 'text';
+        transitionLogo.style.webkitBackgroundClip = 'text';
+        transitionLogo.style.transform = 'translateX(20px)';
+        transitionLogo.style.transition = 'transform 0.6s ease 0.3s';
+        transitionContent.appendChild(transitionLogo);
+
+        return { transitionContainer, layers, transitionContent, transitionLogo };
+      };
+
+      // Initialize transition elements
+      const transitionElements = setupSwipeBlendTransition();
+
+      // Function to trigger swipe blend transition
+      const triggerSwipeBlendTransition = (targetUrl) => {
+        const { transitionContainer, layers, transitionContent, transitionLogo } = transitionElements;
+
+        // Show the transition container
+        transitionContainer.style.display = 'block';
+
+        // Add code particles effect
+        addCodeParticles(transitionContent);
+
+        // Start the swipe blend effect
+        setTimeout(() => {
+          // Animate each layer with staggered timing
+          layers.forEach(layer => {
+            layer.style.transform = 'translateX(0)';
+          });
+
+          // Show transition content
+          transitionContent.style.opacity = '1';
+          transitionLogo.style.transform = 'translateX(0)';
+
+          // Navigate to the target URL after transition completes
+          setTimeout(() => {
+            window.location.href = targetUrl;
+          }, 800);
+        }, 50);
+      };
+
+      // Add code particles animation
+      const addCodeParticles = (container) => {
+        const codeSymbols = ['{', '}', ';', '()', '[]', '<>', '//', '=', '===', '=>', '+=', '&&', '||'];
+        const colors = ['#ffffff', '#00f2fe', '#a6c1ee', '#f08fff'];
+
+        // Create particles
+        for (let i = 0; i < 20; i++) {
+          const particle = document.createElement('div');
+          particle.textContent = codeSymbols[Math.floor(Math.random() * codeSymbols.length)];
+          particle.style.position = 'absolute';
+          particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+          particle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+          particle.style.fontFamily = 'JetBrains Mono, monospace';
+          particle.style.left = (Math.random() * 80 + 10) + '%';
+          particle.style.top = (Math.random() * 80 + 10) + '%';
+          particle.style.opacity = '0';
+          particle.style.transform = 'scale(0) rotate(' + (Math.random() * 90 - 45) + 'deg)';
+          particle.style.transition = 'all 0.5s ease';
+          particle.style.textShadow = '0 0 5px rgba(0, 242, 254, 0.8)';
+          container.appendChild(particle);
+
+          // Animate particles with staggered timing
+          setTimeout(() => {
+            particle.style.opacity = Math.random() * 0.5 + 0.3;
+            particle.style.transform = 'scale(1) rotate(' + (Math.random() * 90 - 45) + 'deg)';
+          }, Math.random() * 300 + 100);
+        }
+      };
+
+      // Handle page entry animation
+      const setupPageEntryAnimation = () => {
+        // Create elements for entry animation
+        const entryContainer = document.createElement('div');
+        entryContainer.className = 'entry-animation-container';
+        entryContainer.style.position = 'fixed';
+        entryContainer.style.top = '0';
+        entryContainer.style.left = '0';
+        entryContainer.style.width = '100vw';
+        entryContainer.style.height = '100vh';
+        entryContainer.style.zIndex = '9998';
+        entryContainer.style.pointerEvents = 'none';
+        document.body.appendChild(entryContainer);
+
+        // Create multiple layers for entry animation (reverse of exit animation)
+        const colors = ['#4facfe', '#00f2fe', '#0a0e17', '#a6c1ee'];
+        const layers = [];
+
+        for (let i = 0; i < colors.length; i++) {
+          const layer = document.createElement('div');
+          layer.className = 'entry-layer';
+          layer.style.position = 'absolute';
+          layer.style.top = '0';
+          layer.style.width = '100%';
+          layer.style.height = '100%';
+          layer.style.backgroundColor = colors[colors.length - 1 - i];
+          layer.style.transform = 'translateX(0)';
+          layer.style.opacity = i === 1 ? '0.95' : '0.7';
+          layer.style.mixBlendMode = i === 1 ? 'normal' : 'color-dodge';
+          layer.style.transition = `transform 0.8s cubic-bezier(0.7, 0, 0.3, 1) ${i * 0.08}s`;
+          entryContainer.appendChild(layer);
+          layers.push(layer);
+        }
+
+        // Animate out the entry layers
+        setTimeout(() => {
+          layers.forEach(layer => {
+            layer.style.transform = 'translateX(100%)';
+          });
+
+          // Remove entry animation after completion
+          setTimeout(() => {
+            entryContainer.remove();
+          }, 1200);
+        }, 100);
+      };
+
+      // Update click handler for CTA button
+      document.querySelector('.cta-button').addEventListener('click', function (e) {
+        e.preventDefault();
+        this.style.transform = 'scale(0.95)';
+
+        setTimeout(() => {
+          this.style.transform = 'translateY(-2px)';
+
+          // Trigger the swipe blend transition
+          triggerSwipeBlendTransition('about.html');
+        }, 150);
+      });
+
+      // Add entry animation on page load
+      document.addEventListener('DOMContentLoaded', function () {
+        setupPageEntryAnimation();
+      });
+
+      // Apply transition to all navigation links
+      document.addEventListener('DOMContentLoaded', function () {
+        const links = document.querySelectorAll('a:not(.cta-button)');
+        links.forEach(link => {
+          link.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+
+            // Only apply transition for internal links
+            if (href && !href.startsWith('http') && !href.startsWith('#')) {
+              e.preventDefault();
+              triggerSwipeBlendTransition(href);
+            }
+          });
+        });
+      });
+
+      // Handle browser back/forward navigation
+      window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+          // Page was loaded from cache (back button)
+          setupPageEntryAnimation();
+        }
+      });
+
       // Make it responsive
-      window.addEventListener('resize', function() {
+      window.addEventListener('resize', function () {
         // Update the radius based on the current viewport size
         const radius = Math.min(window.innerWidth, window.innerHeight) * 0.3;
-        
+
         // Adjust terminal positions on resize
         const terminals = document.querySelectorAll('.terminal');
         const container = document.querySelector('.container');
         const containerRect = container.getBoundingClientRect();
-        
+
         if (terminals.length >= 2) {
           // First terminal
           terminals[0].style.left = Math.max(20, containerRect.left - 320) + 'px';
           terminals[0].style.top = '20%';
-          
+
           // Second terminal
           terminals[1].style.left = Math.min(window.innerWidth - 320, containerRect.right + 20) + 'px';
           terminals[1].style.top = '65%';
         }
       });
     });
-      </script>
-    </body>
-    </html>
-  
-    
+  </script>
+</body>
+
+</html>

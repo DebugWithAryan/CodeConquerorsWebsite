@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeCommunity | Teams</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: #0a0e17;
+      color: #e0e0ff;
+      min-height: 100vh;
+      width: 100vw;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      position: relative;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: transparent;
+      background-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      text-decoration: none;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      color: #e0e0ff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-link:hover {
+      color: #4facfe;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link.active {
+      color: #4facfe;
+    }
+
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* Cursor following effect */
+    .cursor-follower {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(0, 242, 254, 0.2);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .cursor-ripple {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 242, 254, 0.6);
+      animation: ripple 1.5s ease-out infinite;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0.5);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .main-content {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .page-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s ease forwards;
+      position: relative;
+      display: inline-block;
+      color: transparent;
+      background-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .team-section {
+      margin-bottom: 4rem;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid;
+      border-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%) 1;
+      display: inline-block;
+    }
+
+    .section-description {
+      margin-bottom: 2rem;
+      max-width: 800px;
+    }
+
+    .teams-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .team-card {
+      background: rgba(18, 24, 38, 0.8);
+      border-radius: 8px;
+      border: 1px solid #2a3a5a;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease, box-shadow 0.5s ease;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(30px);
+      text-align: center;
+    }
+    .team-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s ease;
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px) !important;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 
+                  0 0 15px rgba(79, 172, 254, 0.5),
+                  0 0 30px rgba(0, 242, 254, 0.3);
+      border-color: rgba(79, 172, 254, 0.6);
+    }
+
+    .team-card:hover::before {
+      transform: scaleY(1);
+    }
+
+    .lead-card {
+      background: rgba(18, 24, 38, 0.9);
+      border: 1px solid #3a4a6a;
+      position: relative;
+    }
+    .lead-card:hover {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 
+                  0 0 20px rgba(79, 172, 254, 0.6),
+                  0 0 40px rgba(0, 242, 254, 0.4);
+      border-color: rgba(166, 193, 238, 0.8);
+    }
+    
+
+    .lead-card::after {
+      content: 'LEAD';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 0.7rem;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: #0a0e17;
+      font-weight: bold;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .member-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #4facfe, #00f2fe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lead-avatar {
+      width: 150px;
+      height: 150px;
+      border: 3px solid;
+      border-image: linear-gradient(45deg, #4facfe, #00f2fe, #a6c1ee) 1;
+    }
+
+    .avatar-initials {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #0a0e17;
+    }
+
+    .avatar-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .member-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #4facfe;
+    }
+
+    .member-role {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      color: #a6c1ee;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .member-bio {
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      color: #e0e0ff;
+      line-height: 1.6;
+    }
+
+    .member-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .member-link {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: rgba(79, 172, 254, 0.2);
+      color: #4facfe;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .member-link:hover {
+      background: #4facfe;
+      color: #0a0e17;
+      transform: translateY(-2px);
+      box-shadow: 0 0 10px rgba(79, 172, 254, 0.8),
+                  0 0 20px rgba(0, 242, 254, 0.4);
+    }
+
+    .sub-members {
+      background: rgba(18, 24, 38, 0.5);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: -1rem;
+      margin-bottom: 2rem;
+      border: 1px solid #2a3a5a;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .sub-member {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem;
+      border-radius: 6px;
+      background: rgba(24, 30, 46, 0.6);
+      transition: all 0.3s ease, box-shadow 0.5s ease;
+      border: 1px solid transparent;
+    }
+
+    .sub-member:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3),
+                  0 0 10px rgba(79, 172, 254, 0.4);
+      background: rgba(30, 36, 54, 0.8);
+      border-color: rgba(79, 172, 254, 0.3);
+    }
+
+    .sub-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #4facfe, #00f2fe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .sub-avatar-initials {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #0a0e17;
+    }
+
+    .sub-info {
+      flex-grow: 1;
+    }
+
+    .sub-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+      color: #e0e0ff;
+    }
+
+    .sub-links {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .sub-link {
+      font-size: 0.8rem;
+      color: #4facfe;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      transition: color 0.3s;
+    }
+
+    .sub-link:hover {
+      color: #00f2fe;
+    }
+
+    .loading-bar {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      bottom: 10%;
+      left: 25%;
+      width: 0%;
+      opacity: 0.7;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.7);
+      z-index: 2;
+    }
+
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.5rem 0 1.2rem;
+      justify-content: center;
+    }
+
+    .tech-chip {
+      background: rgba(79, 172, 254, 0.15);
+      border: 1px solid rgba(79, 172, 254, 0.3);
+      border-radius: 16px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.8rem;
+      color: #4facfe;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .tech-chip:hover {
+      background: rgba(79, 172, 254, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .nav {
+        gap: 1rem;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .teams-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+
+      .sub-members {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .teams-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Mobile Navigation styles */
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      z-index: 101;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: #e0e0ff;
+      margin: 5px 0;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: block;
+      }
+
+      .nav {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        width: 70%;
+        height: 100vh;
+        background: rgba(18, 24, 38, 0.95);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: right 0.5s ease;
+        z-index: 100;
+        border-left: 1px solid #2a3a5a;
+        backdrop-filter: blur(10px);
+      }
+
+      .nav.active {
+        right: 0;
+      }
+
+      .nav-link {
+        margin: 1.5rem 0;
+        font-size: 1.2rem;
+      }
+
+      .hamburger.active div:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+        background-color: #4facfe;
+      }
+
+      .hamburger.active div:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active div:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+        background-color: #4facfe;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="particles-container" id="particles"></div>
+
+  <!-- Cursor follower elements -->
+  <div class="cursor-follower" id="cursor-follower">
+    <div class="cursor-ripple"></div>
+  </div>
+
+  <header class="header">
+    <a href="index.html" class="logo">Code Conquerors</a>
+    <div class="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <nav class="nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link">About Us</a>
+      <a href="team.html" class="nav-link active">Teams</a>
+      <a href="projects.html" class="nav-link">Projects</a>
+      <a href="events.html" class="nav-link">Events</a>
+      <a href="contact.html" class="nav-link">Contacts</a>
+  </nav>
+  </header>
+
+  <main class="main-content">
+    <h1 class="page-title" id="page-title">Our Teams</h1>
+    <p class="subtitle">Meet the talented developers behind Code Conquerors</p>
+
+    <!-- App Developers Section -->
+    <section class="team-section" id="app-dev-section">
+      <h2 class="section-title">App Developers</h2>
+      <p class="section-description">Empowering ideas through innovation—Code Conquerors App Development Team creates
+        intuitive apps for a better campus experience.</p>
+
+      <div class="teams-grid" id="app-dev-leads">
+        <!-- Lead cards will be added here by JavaScript -->
+      </div>
+
+      <div class="sub-members" id="app-dev-members">
+        <!-- Sub members will be added here by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Web Developers Section -->
+    <section class="team-section" id="web-dev-section">
+      <h2 class="section-title">Web Developers</h2>
+      <p class="section-description">Crafting responsive, accessible and performant web applications using modern
+        frameworks and technologies.</p>
+
+      <div class="teams-grid" id="web-dev-leads">
+        <!-- Lead cards will be added here by JavaScript -->
+      </div>
+
+      <div class="sub-members" id="web-dev-members">
+        <!-- Sub members will be added here by JavaScript -->
+      </div>
+    </section>
+
+    <!-- DSA and CP Section -->
+    <section class="team-section" id="dsa-cp-section">
+      <h2 class="section-title">DSA & Competitive Programming</h2>
+      <p class="section-description">Our algorithmic experts who excel at optimizing code and participating in global
+        programming competitions.</p>
+
+      <div class="teams-grid" id="dsa-cp-leads">
+        <!-- Lead cards will be added here by JavaScript -->
+      </div>
+
+      <div class="sub-members" id="dsa-cp-members">
+        <!-- Sub members will be added here by JavaScript -->
+      </div>
+    </section>
+
+    <!-- AI/ML and Data Science Section -->
+    <section class="team-section" id="ai-ml-section">
+      <h2 class="section-title">AI/ML & Data Science</h2>
+      <p class="section-description">Innovators in machine learning, deep learning, and data analysis working on
+        cutting-edge solutions.</p>
+
+      <div class="teams-grid" id="ai-ml-leads">
+        <!-- Lead cards will be added here by JavaScript -->
+      </div>
+
+      <div class="sub-members" id="ai-ml-members">
+        <!-- Sub members will be added here by JavaScript -->
+      </div>
+    </section>
+
+    <!-- UI/UX & Social Media Section -->
+    <section class="team-section" id="uiux-social-section">
+      <h2 class="section-title">Social Media</h2>
+      <p class="section-description">Creative mind responsible for managing our community presence online.</p>
+
+      <div class="teams-grid" id="uiux-social-leads">
+        <!-- Lead cards will be added here by JavaScript -->
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Title typing effect
+      const pageTitle = document.getElementById('page-title');
+      const titleText = "Our Teams";
+      let i = 0;
+
+      function typeWriter() {
+        if (i < titleText.length) {
+          pageTitle.textContent += titleText.charAt(i);
+          i++;
+          setTimeout(typeWriter, 100);
+        } else {
+          // Add glitch effect after typing
+          setTimeout(glitchEffect, 500);
+        }
+      }
+
+      function glitchEffect() {
+        pageTitle.style.animation = "none";
+        pageTitle.offsetHeight; // Trigger reflow
+        pageTitle.style.animation = "glitch 0.5s ease";
+
+        // Add glitch keyframes dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 0); opacity: 0.8; text-shadow: 3px 0 #ff00e1; }
+            40% { transform: translate(5px, 0); opacity: 1; text-shadow: -3px 0 #00fff9; }
+            60% { transform: translate(-3px, 0); opacity: 0.9; text-shadow: 2px 0 #ff00e1; }
+            80% { transform: translate(2px, 0); text-shadow: -2px 0 #00fff9; }
+            100% { transform: translate(0); text-shadow: none; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      pageTitle.textContent = "";
+      setTimeout(typeWriter, 500);
+
+      // Create coding particles
+      const particles = document.getElementById('particles');
+      const codeSymbols = ['{', '}', ';', '()', '[]', '<>', '//', '=', '===', '=>', '+=', '&&', '||'];
+      const colors = ['#4facfe', '#00f2fe', '#a6c1ee', '#f08fff', '#0ff0fc'];
+
+      for (let i = 0; i < 40; i++) {
+        const particle = document.createElement('div');
+        particle.textContent = codeSymbols[Math.floor(Math.random() * codeSymbols.length)];
+        particle.style.position = 'absolute';
+        particle.style.opacity = (Math.random() * 0.5 + 0.1).toString();
+        particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+        particle.style.fontFamily = 'JetBrains Mono, monospace';
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.top = Math.random() * 100 + 'vh';
+        particle.style.transform = 'rotate(' + (Math.random() * 90 - 45) + 'deg)';
+        particle.style.filter = 'blur(' + (Math.random() * 2) + 'px)';
+        particle.style.zIndex = '2';
+        particle.style.pointerEvents = 'none';
+        particle.style.textShadow = '0 0 5px ' + colors[Math.floor(Math.random() * colors.length)];
+
+        // Animation
+        particle.style.transition = 'all ' + (Math.random() * 5 + 10) + 's linear';
+        particle.style.animationDuration = (Math.random() * 20 + 10) + 's';
+        particle.style.animationTimingFunction = 'linear';
+        particle.style.animationIterationCount = 'infinite';
+
+
+        // Add to your script after the particles creation
+        window.addEventListener('scroll', () => {
+          const scrollY = window.scrollY;
+
+          // Move particles slightly when scrolling for parallax effect
+          const particlesElements = document.querySelectorAll('#particles > div');
+          particlesElements.forEach((particle, index) => {
+            // Apply different scroll speeds to different particles for layered effect
+            const speed = index % 3 === 0 ? 0.05 : (index % 3 === 1 ? 0.03 : 0.01);
+            particle.style.transform = `translateY(${-scrollY * speed}px) rotate(${particle.dataset.rotation || '0deg'})`;
+          });
+        });
+
+        const animKeyframes = `
+          @keyframes float${i} {
+            0% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
+            25% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 90 - 45}deg); }
+            50% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 90 - 45}deg); }
+            75% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 90 - 45}deg); }
+            100% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
+          }
+        `;
+
+        const style = document.createElement('style');
+        style.textContent = animKeyframes;
+        document.head.appendChild(style);
+
+        particle.style.animation = `float${i} ${Math.random() * 20 + 10}s linear infinite`;
+
+        particles.appendChild(particle);
+      }
+
+
+      // Animation for sections
+      const sections = document.querySelectorAll('.team-section');
+      sections.forEach((section, index) => {
+        section.style.animationDelay = `${(index * 0.2) + 0.7}s`;
+      });
+
+      // Team data
+      const teamData = {
+        "appDev": {
+          "leads": [
+            {
+              name: 'Aryan Jaiswal',
+              initials: 'AJ',
+              role: 'App Development Lead',
+              image: 'Assets/AryanJaiswal.jpg',
+              bio: 'Leading app development at Code Conquerors, turning ideas into innovative digital solutions. Passionate about building tools that empower and inspire!',
+              techStack: ['Kotlin', 'Jetpack Compose', 'Java', 'SpringBoot', 'Git'],
+              links: [
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>', link: 'https://github.com/DebugWithAryan' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>', link: 'https://codolio.com/profile/aryaneee/' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>', link: 'mailto:aryanjai.works@gmail.com' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>', link: 'https://instagram.com/aryan._eee/' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>', link: 'https://www.linkedin.com/in/aryanjaiswal1/' }
+              ]
+            },
+            {
+              name: 'Avinash Sharma',
+              initials: 'AS',
+              role: 'App Development Lead',
+              image: 'Assets/AvinashSharma.jpg',
+              bio: 'Driving innovation as the App Development Lead at Code Conquerors. Building smart, user-focused solutions to enhance the college experience!',
+              techStack: ['Kotlin', 'Jetpack Compose', 'KMP', 'Github Actions'],
+              links: [
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>', link: 'https://github.com/Avinash-Codes' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>', link: 'https://codolio.com/profile/Avinash_Coder' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>', link: 'mailto:avinash.sharma.works@gmail.com' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>', link: 'https://www.instagram.com/avinash_coder/' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>', link: 'https://www.linkedin.com/in/avinash-sharma-59406b280/' }
+              ]
+            }
+          ],
+          "members": [
+            { name: 'Piyush Raj', initials: 'PR', github: 'ryanpark-dev', codefolio: 'ryanpark' },
+            { name: 'Swapnil Bam', initials: 'SB', github: 'miawong-dev', codefolio: 'miawong' },
+            { name: 'Khushi Sharma', initials: 'KS', github: 'jamespeterson', codefolio: 'jamespeterson' },
+            { name: 'Chitransh Gupta', initials: 'CG', github: 'aishakhan-dev', codefolio: 'aishakhan' },
+          ]
+        },
+        "webDev": {
+          "leads": [
+            {
+              name: 'Ayush Prakash Tiwari',
+              initials: 'AP',
+              role: 'Web Development Lead',
+              image: 'Assets/AyushPrakash.jpeg',
+              bio: 'Driving web innovation as Code Conquerors Web Development Lead. Crafting seamless digital experiences for all.',
+              techStack: ['HTML', 'CSS', 'JavaScript', 'SpringBoot'],
+              links: [
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>', link: 'https://github.com/AyushPrakash414' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>', link: 'https://codolio.com/profile/Dd99JA6n' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>', link: 'mailto:prakashayush414@gmail.com' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>', link: 'https://www.instagram.com/ayush_prakash04/' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>', link: 'https://www.linkedin.com/in/ayush-prakash-tiwari-5281b2286/' }
+              ]
+            },
+            {
+              name: 'Aaradhya Waoo',
+              initials: 'AW',
+              role: 'MERN Stack Lead',
+              image: 'Assets/AaradhyaWaoo.jpg',
+              bio: 'MERN Stack Lead at CodeConquerors | Crafting modern web applications with seamless front-end and robust back-end architecture.',
+              techStack: ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'MongoDB'],
+              links: [
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>', link: 'https://github.com/aaradhyawaoo' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>', link: 'https://codolio.com/profile/aaradhyawaoo' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>', link: 'mailto:aaradhyawaoo@gmail.com' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>', link: 'https://www.instagram.com/aaradhyawaoo/' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>', link: 'www.linkedin.com/in/aaradhya-waoo/' }
+              ]
+            }
+          ],
+          "members": [
+            { "name": "Utkarsh Raj", "initials": "UR", "github": "utkarshraj", "codefolio": "utkarshraj" },
+            { "name": "Sargam Sahu", "initials": "SS", "github": "sargamsahu", "codefolio": "sargamsahu" },
+            { "name": "Mohammad Ubaid", "initials": "MU", "github": "mohammadubaid", "codefolio": "mohammadubaid" },
+            { "name": "Yash Kumar", "initials": "YK", "github": "yashkumar", "codefolio": "yashkumar" },
+            { "name": "Komal", "initials": "K", "github": "komal", "codefolio": "komal" },
+            { "name": "Aditya Prajapati", "initials": "AP", "github": "adityaprajapati", "codefolio": "adityaprajapati" },
+            { "name": "Vedansh Dhingra", "initials": "VD", "github": "vedanshdhingra", "codefolio": "vedanshdhingra" },
+            { "name": "Saanidhya Saurabh Tiwari", "initials": "SST", "github": "saanidhyatiwari", "codefolio": "saanidhyatiwari" },
+            { "name": "Simon Mittal", "initials": "SM", "github": "simonmittal", "codefolio": "simonmittal" },
+            { "name": "Shagun Choudhary", "initials": "SC", "github": "shagunchoudhary", "codefolio": "shagunchoudhary" },
+            { "name": "Shweta Kumari", "initials": "SK", "github": "shwetakumari", "codefolio": "shwetakumari" },
+            { "name": "Yashashvi Tripathi", "initials": "YT", "github": "yashashvitripathi", "codefolio": "yashashvitripathi" }
+          ]
+
+        },
+        "dsaCP": {
+          "leads": [
+            {
+              name: 'Soham Ghosh',
+              initials: 'SG',
+              role: 'DSA Lead',
+              image: 'Assets/SohamGhosh.jpg',
+              bio: 'Driving logic and efficiency as the DSA Lead at [Club Name]. Empowering peers with structured thinking and coding skills!',
+              techStack: ['C++', 'DSA', 'Codeforces', 'LeetCODE'],
+              links: [
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>', link: 'https://github.com/codingsoham' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>', link: 'https://codolio.com/profile/codingsoham' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>', link: 'mailto:sohamghosh2967@gmail.com' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>', link: 'https://www.instagram.com/codingsohamg/' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>', link: 'https://www.linkedin.com/in/codingsoham/' }
+              ]
+            },
+            {
+              name: 'Arjun Patel',
+              initials: 'AP',
+              role: 'Competitive Programming Lead',
+              image: '/api/placeholder/400/400',
+              bio: 'ICPC World Finalist and Codeforces Master. Specialized in mathematical algorithms and optimization techniques.',
+              links: [
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>', link: 'https://github.com/arjuncp' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>', link: 'https://codefolio.dev/arjunpatel' }
+              ]
+            }
+          ],
+          "members": [
+            { name: 'Khushi Sharma', initials: 'KS', github: 'jamespeterson', codefolio: 'jamespeterson' },
+            { "name": "Atharva Kesharvani", "initials": "AK", "github": "atharvakesharvani", "codefolio": "atharvakesharvani" },
+            { "name": "Girjendra Lodha", "initials": "GL", "github": "girjendralodha", "codefolio": "girjendralodha" },
+            { "name": "Mohit Singh Negi", "initials": "MSN", "github": "mohitsinghnegi", "codefolio": "mohitsinghnegi" },
+            { "name": "Sargam Sahu", "initials": "SS", "github": "sargamsahu", "codefolio": "sargamsahu" },
+            { "name": "Yash Kumar", "initials": "YK", "github": "yashkumar", "codefolio": "yashkumar" },
+            { "name": "Yashashvi Tripathi", "initials": "YT", "github": "yashashvitripathi", "codefolio": "yashashvitripathi" },
+            { "name": "Shweta Kumari", "initials": "SK", "github": "shwetakumari", "codefolio": "shwetakumari" },
+            { "name": "Shagun Choudhary", "initials": "SC", "github": "shagunchoudhary", "codefolio": "shagunchoudhary" },
+            { "name": "Simon Mittal", "initials": "SM", "github": "simonmittal", "codefolio": "simonmittal" },
+            { "name": "Arunam Jain", "initials": "AJ", "github": "arunamjain", "codefolio": "arunamjain" },
+            { "name": "Komal", "initials": "K", "github": "komal", "codefolio": "komal" },
+            { "name": "Swapnil Bam", "initials": "SB", "github": "swapnilbam", "codefolio": "swapnilbam" }
+          ]
+
+        },
+        "aiML": {
+          "leads": [
+            {
+              name: 'Satyam Kumar',
+              initials: 'SK',
+              role: 'AI/ML Developer',
+              image: 'Assets/SatyamKumar.jpeg',
+              bio: 'Passionate about innovation as an AI/ML Developer at Code Conquerors, building smart systems that learn and adapt.',
+              techStack: ['Python', 'TensorFlow', 'PyTorch', 'OpenCV', 'Git'],
+              links: [
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>', link: 'https://github.com/Isatyamks/' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>', link: 'https://codolio.com/profile/Isatyamks' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>', link: 'mailto:isatyamks@gmail.com' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>', link: 'https://www.instagram.com/Isatyamks/' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>', link: 'https://www.linkedin.com/in/Isatyamks/' }
+              ]
+            },
+            {
+              name: 'Raj Mehta',
+              initials: 'RM',
+              role: 'Data Science Lead',
+              image: '/api/placeholder/400/400',
+              bio: 'Data scientist with expertise in big data analytics, statistical modeling and data visualization. Kaggle grandmaster and community mentor.',
+              links: [
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>', link: 'https://github.com/kanchi1802' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>', link: 'https://codefolio.dev/elenasorokina' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>', link: 'https://www.linkedin.com/in/kanchi-gupta/' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>', link: 'https://instagram.com/kanchi1802?igshid=ZDc4ODBmNjlmNQ==' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>', link: 'https://github.com/kanchigupta' }
+              ]
+            }
+          ],
+          "members": [
+            { "name": "Mohammad Ubaid", "initials": "MU", "github": "mohammadubaid", "codefolio": "mohammadubaid" },
+            { "name": "Vedang Chaturvedi", "initials": "VC", "github": "vedangchaturvedi", "codefolio": "vedangchaturvedi" },
+            { "name": "Arunam Jain", "initials": "AJ", "github": "arunamjain", "codefolio": "arunamjain" },
+            { "name": "Chitransh Gupta", "initials": "CG", "github": "chitranshgupta", "codefolio": "chitranshgupta" }
+          ]
+
+        },
+        "socialMediaManager": {
+          "leads": [
+            {
+              name: 'Kanchi Gupta',
+              initials: 'KG',
+              role: 'Social Media Manager',
+              image: 'Assets/KanchiGupta.jpg',
+              bio: 'Managing Code Conquerors digital presence with creativity and strategy. Connecting members, sharing stories, and driving engagement across platforms!',
+              techStack: ['Java', 'Graphic Designing', 'UI/UX'],
+              links: [
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>', link: 'https://github.com/kanchi1802' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>', link: 'mailto:kanchi2gupta@gmail.com' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>', link: 'https://instagram.com/Kxnchigupta_' },
+                { icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>', link: 'https://www.linkedin.com/in/kanchi-gupta-331287290/' },
+              ]
+            },
+          ],
+        }
+      };
+
+      // Function to create team lead cards
+      function createLeadCards(leads, containerId) {
+        const container = document.getElementById(containerId);
+
+        leads.forEach((lead, index) => {
+          const card = document.createElement('div');
+          card.className = 'team-card lead-card';
+          card.style.animationDelay = `${index * 0.2 + 1}s`;
+          card.style.animation = 'fadeIn 0.8s ease forwards';
+
+          let avatarContent = '';
+          if (lead.image) {
+            avatarContent = `<img src="${lead.image}" alt="${lead.name}" class="avatar-image">`;
+          } else {
+            avatarContent = `<span class="avatar-initials">${lead.initials}</span>`;
+          }
+
+          // Tech stack chips HTML
+          let techStackHTML = '';
+          if (lead.techStack && lead.techStack.length > 0) {
+            techStackHTML = '<div class="tech-stack">';
+            lead.techStack.forEach(tech => {
+              techStackHTML += `<span class="tech-chip">${tech}</span>`;
+            });
+            techStackHTML += '</div>';
+          }
+
+          let linksHTML = '';
+          lead.links.forEach(link => {
+            linksHTML += `<a href="${link.link}" class="member-link" target="_blank" rel="noopener">${link.icon}</a>`;
+          });
+
+          card.innerHTML = `
+                <div class="member-avatar lead-avatar">
+                ${avatarContent}
+                </div>
+                <h3 class="member-name">${lead.name}</h3>
+                <div class="member-role">${lead.role}</div>
+                <p class="member-bio">${lead.bio}</p>
+                ${techStackHTML}
+                <div class="member-links">
+                ${linksHTML}
+                </div>
+            `;
+
+          container.appendChild(card);
+        });
+      }
+
+      // Function to create sub member elements
+      function createSubMembers(members, containerId) {
+        const container = document.getElementById(containerId);
+
+        members.forEach((member, index) => {
+          const subMember = document.createElement('div');
+          subMember.className = 'sub-member';
+          subMember.style.animationDelay = `${index * 0.1 + 1.5}s`;
+          subMember.style.animation = 'fadeIn 0.6s ease forwards';
+
+          subMember.innerHTML = `
+            <div class="sub-avatar">
+              <span class="sub-avatar-initials">${member.initials}</span>
+            </div>
+            <div class="sub-info">
+              <div class="sub-name">${member.name}</div>
+              <div class="sub-links">
+                <a href="https://github.com/${member.github}" class="sub-link" target="_blank" rel="noopener">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                  GitHub
+                </a>
+                <a href="https://codefolio.dev/${member.codefolio}" class="sub-link" target="_blank" rel="noopener">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                  CodeFolio
+                </a>
+              </div>
+            </div>
+          `;
+
+          container.appendChild(subMember);
+        });
+      }
+
+      // Cursor follower effect
+      const cursorFollower = document.getElementById('cursor-follower');
+
+      // Enhanced water-like cursor effect
+      document.addEventListener('mousemove', (e) => {
+        // Show the cursor follower when mouse moves
+        if (cursorFollower.style.opacity === '0') {
+          cursorFollower.style.opacity = '1';
+        }
+
+        // Position the follower with slight delay for water-like effect
+        setTimeout(() => {
+          cursorFollower.style.left = e.clientX + 'px';
+          cursorFollower.style.top = e.clientY + 'px';
+
+          // Add more pronounced water-like distortion effect on movement
+          const distortionFactor = Math.sin(Date.now() / 300) * 0.3;
+          const pulseSize = 1 + Math.sin(Date.now() / 500) * 0.2;
+
+          cursorFollower.style.transform = `translate(-50%, -50%) scale(${pulseSize}) skew(${distortionFactor}deg, ${distortionFactor}deg)`;
+
+          // Add subtle glow color change
+          const hue = (Date.now() / 50) % 360;
+          cursorFollower.style.boxShadow = `0 0 15px rgba(${Math.sin(hue) * 30 + 70}, ${Math.sin(hue + 2) * 30 + 210}, ${Math.sin(hue + 4) * 30 + 254}, 0.6)`;
+        }, 80);
+
+        // Create ripple effect on mouse movement sometimes
+        if (Math.random() > 0.97) {
+          const ripple = document.createElement('div');
+          ripple.className = 'cursor-ripple';
+          ripple.style.left = e.clientX + 'px';
+          ripple.style.top = e.clientY + 'px';
+          ripple.style.transform = 'translate(-50%, -50%)';
+          document.body.appendChild(ripple);
+
+          // Remove ripple after animation completes
+          setTimeout(() => {
+            ripple.remove();
+          }, 1500);
+        }
+      });
+
+
+      // Create team cards for each section
+      createLeadCards(teamData.appDev.leads, 'app-dev-leads');
+      createSubMembers(teamData.appDev.members, 'app-dev-members');
+
+      createLeadCards(teamData.webDev.leads, 'web-dev-leads');
+      createSubMembers(teamData.webDev.members, 'web-dev-members');
+
+      createLeadCards(teamData.dsaCP.leads, 'dsa-cp-leads');
+      createSubMembers(teamData.dsaCP.members, 'dsa-cp-members');
+
+      createLeadCards(teamData.aiML.leads, 'ai-ml-leads');
+      createSubMembers(teamData.aiML.members, 'ai-ml-members');
+
+      createLeadCards(teamData.socialMediaManager.leads, 'uiux-social-leads');
+      createSubMembers(teamData.uiuxSocial.members, 'uiux-social-members');
+
+      // Particle system for background
+      const particlesContainer = document.getElementById('particles');
+
+      // Create particles
+      for (let i = 0; i < 40; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+
+        // Random positioning
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        const size = Math.random() * 3 + 1;
+        const animDuration = Math.random() * 20 + 10;
+        const animDelay = Math.random() * 10;
+        const opacity = Math.random() * 0.5 + 0.1;
+
+        particle.style.cssText = `
+          position: absolute;
+          width: ${size}px;
+          height: ${size}px;
+          border-radius: 50%;
+          background: rgba(79, 172, 254, ${opacity});
+          box-shadow: 0 0 ${size * 2}px rgba(0, 242, 254, ${opacity});
+          left: ${posX}%;
+          top: ${posY}%;
+          animation: float ${animDuration}s ease-in-out infinite;
+          animation-delay: -${animDelay}s;
+        `;
+
+        particlesContainer.appendChild(particle);
+      }
+
+      // Add loading bar animation at the bottom
+      const loadingBar = document.createElement('div');
+      loadingBar.className = 'loading-bar';
+      document.body.appendChild(loadingBar);
+
+      setTimeout(() => {
+        loadingBar.style.transition = 'width 2.5s ease-in-out';
+        loadingBar.style.width = '50%';
+
+        setTimeout(() => {
+          loadingBar.style.transition = 'width 1.5s ease-in-out';
+          loadingBar.style.width = '100%';
+
+          setTimeout(() => {
+            loadingBar.style.opacity = '0';
+          }, 1500);
+        }, 2500);
+      }, 500);
+
+      // Add keyframes for floating particles
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes float {
+          0% { transform: translate(0, 0) rotate(0deg); }
+          25% { transform: translate(10px, -15px) rotate(5deg); }
+          50% { transform: translate(-5px, 20px) rotate(-5deg); }
+          75% { transform: translate(-15px, -10px) rotate(3deg); }
+          100% { transform: translate(0, 0) rotate(0deg); }
+        }
+      `;
+      document.head.appendChild(style);
+    });
+
+    const hamburger = document.querySelector('.hamburger');
+    const nav = document.querySelector('.nav');
+
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        nav.classList.toggle('active');
+      });
+
+      // Close menu when link is clicked
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          nav.classList.remove('active');
+        });
+      });
+    }
+  </script>
+</body>
+
+</html>

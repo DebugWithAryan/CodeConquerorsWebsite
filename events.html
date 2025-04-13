@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeCommunity | Events</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0a0e17;
+            color: #e0e0ff;
+            min-height: 100vh;
+            width: 100vw;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: transparent;
+            background-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            font-family: 'JetBrains Mono', monospace;
+            color: #e0e0ff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #4facfe;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: #4facfe;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Cursor following effect */
+        .cursor-follower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 242, 254, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cursor-ripple {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 242, 254, 0.6);
+            animation: ripple 1.5s ease-out infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .page-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 1s ease forwards;
+            position: relative;
+            display: inline-block;
+            color: transparent;
+            background-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Timeline specific styles */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-image: linear-gradient(to bottom, #4facfe, #00f2fe, #a6c1ee);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+        }
+
+        .timeline-event {
+            padding: 20px 40px;
+            position: relative;
+            width: 50%;
+            opacity: 0;
+            margin-bottom: 60px;
+        }
+
+        .timeline-event.left {
+            left: 0;
+        }
+
+        .timeline-event.right {
+            left: 50%;
+        }
+
+        .timeline-event-content {
+            padding: 20px;
+            background: rgba(18, 24, 38, 0.8);
+            border-radius: 8px;
+            border: 1px solid #2a3a5a;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timeline-event-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 242, 254, 0.4), 
+                        0 0 15px rgba(79, 172, 254, 0.6),
+                        0 0 30px rgba(0, 242, 254, 0.2);
+            border-color: rgba(0, 242, 254, 0.6);
+            background: rgba(18, 24, 38, 0.9);
+        }
+        
+        .timeline-event-content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 8px;
+            box-shadow: 0 0 0 2px rgba(0, 242, 254, 0);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+        
+        .timeline-event-content:hover::after {
+            box-shadow: 0 0 20px 3px rgba(0, 242, 254, 0.7);
+            animation: neonPulse 2s infinite alternate;
+        }
+        
+        @keyframes neonPulse {
+            0% {
+                box-shadow: 0 0 15px 2px rgba(0, 242, 254, 0.7);
+            }
+            100% {
+                box-shadow: 0 0 25px 5px rgba(79, 172, 254, 0.9);
+            }
+        }
+        
+        .timeline-event-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #4facfe;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-event-content:hover .timeline-event-title {
+            color: #00f2fe;
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.7);
+        }
+
+        .timeline-date {
+            position: absolute;
+            top: -40px;
+            width: 120px;
+            text-align: center;
+            padding: 8px 0;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            color: #0a0e17;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+            z-index: 10;
+        }
+
+        .left .timeline-date {
+            right: calc(100% - 120px);
+        }
+
+        .right .timeline-date {
+            left: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: #00f2fe;
+            border-radius: 50%;
+            top: 20px;
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.9);
+        }
+
+        .left .timeline-dot {
+            right: -12.5px;
+        }
+
+        .right .timeline-dot {
+            left: -12.5px;
+        }
+
+        .timeline-event-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #4facfe;
+        }
+
+        .timeline-event-image {
+            width: 100%;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+            border: 2px solid rgba(79, 172, 254, 0.3);
+        }
+
+        .timeline-event-image:hover {
+            transform: scale(1.03);
+            border-color: rgba(79, 172, 254, 0.8);
+        }
+
+        .timeline-event-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #a6c1ee;
+        }
+
+        .loading-bar {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            bottom: 10%;
+            left: 25%;
+            width: 0%;
+            opacity: 0.7;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.7);
+            z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .timeline::after {
+                left: 31px;
+            }
+
+            .timeline-event {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-event.right {
+                left: 0;
+            }
+
+            .timeline-dot {
+                left: 18px;
+            }
+
+            .timeline-date {
+                left: 0 !important;
+                top: -40px;
+                width: auto;
+                min-width: 120px;
+            }
+        }
+
+        /* Hamburger menu */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: #e0e0ff;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .nav {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                width: 70%;
+                height: 100vh;
+                background: rgba(18, 24, 38, 0.95);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: right 0.5s ease;
+                z-index: 100;
+                border-left: 1px solid #2a3a5a;
+                backdrop-filter: blur(10px);
+            }
+
+            .nav.active {
+                right: 0;
+            }
+
+            .nav-link {
+                margin: 1.5rem 0;
+                font-size: 1.2rem;
+            }
+
+            .hamburger.active div:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+                background-color: #4facfe;
+            }
+
+            .hamburger.active div:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active div:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+                background-color: #4facfe;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="particles-container" id="particles"></div>
+
+    <!-- Cursor follower elements -->
+    <div class="cursor-follower" id="cursor-follower">
+        <div class="cursor-ripple"></div>
+    </div>
+
+    <header class="header">
+        <a href="index.html" class="logo">Code Conquerors</a>
+        <div class="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <nav class="nav">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link">About Us</a>
+            <a href="team.html" class="nav-link">Teams</a>
+            <a href="projects.html" class="nav-link">Projects</a>
+            <a href="events.html" class="nav-link active">Events</a>
+            <a href="contact.html" class="nav-link">Contacts</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h1 class="page-title" id="page-title">Our Events</h1>
+        <p class="subtitle">Discover our past community events and achievements</p>
+
+        <div class="timeline" id="events-timeline">
+            <!-- Events will be added here by JavaScript -->
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Title typing effect
+            const pageTitle = document.getElementById('page-title');
+            const titleText = "Our Events";
+            let i = 0;
+
+            function typeWriter() {
+                if (i < titleText.length) {
+                    pageTitle.textContent += titleText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                } else {
+                    // Add glitch effect after typing
+                    setTimeout(glitchEffect, 500);
+                }
+            }
+
+            function glitchEffect() {
+                pageTitle.style.animation = "none";
+                pageTitle.offsetHeight; // Trigger reflow
+                pageTitle.style.animation = "glitch 0.5s ease";
+
+                // Add glitch keyframes dynamically
+                const style = document.createElement('style');
+                style.textContent = `
+          @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 0); opacity: 0.8; text-shadow: 3px 0 #ff00e1; }
+            40% { transform: translate(5px, 0); opacity: 1; text-shadow: -3px 0 #00fff9; }
+            60% { transform: translate(-3px, 0); opacity: 0.9; text-shadow: 2px 0 #ff00e1; }
+            80% { transform: translate(2px, 0); text-shadow: -2px 0 #00fff9; }
+            100% { transform: translate(0); text-shadow: none; }
+          }
+        `;
+                document.head.appendChild(style);
+            }
+
+            setTimeout(() => {
+                pageTitle.textContent = '';
+                typeWriter();
+            }, 500);
+
+            // Create coding particles
+            const particles = document.getElementById('particles');
+            const codeSymbols = ['{', '}', ';', '()', '[]', '<>', '//', '=', '===', '=>', '+=', '&&', '||'];
+            const colors = ['#4facfe', '#00f2fe', '#a6c1ee', '#f08fff', '#0ff0fc'];
+
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.textContent = codeSymbols[Math.floor(Math.random() * codeSymbols.length)];
+                particle.style.position = 'absolute';
+                particle.style.opacity = (Math.random() * 0.5 + 0.1).toString();
+                particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                particle.style.fontFamily = 'JetBrains Mono, monospace';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.transform = 'rotate(' + (Math.random() * 90 - 45) + 'deg)';
+                particle.style.filter = 'blur(' + (Math.random() * 2) + 'px)';
+                particle.style.zIndex = '2';
+                particle.style.pointerEvents = 'none';
+                particle.style.textShadow = '0 0 5px ' + colors[Math.floor(Math.random() * colors.length)];
+
+                particles.appendChild(particle);
+
+                // Add to your script after the particles creation
+                window.addEventListener('scroll', () => {
+                    const scrollY = window.scrollY;
+
+                    // Move particles slightly when scrolling for parallax effect
+                    const particlesElements = document.querySelectorAll('#particles > div');
+                    particlesElements.forEach((particle, index) => {
+                        // Apply different scroll speeds to different particles for layered effect
+                        const speed = index % 3 === 0 ? 0.05 : (index % 3 === 1 ? 0.03 : 0.01);
+                        particle.style.transform = `translateY(${-scrollY * speed}px) rotate(${particle.dataset.rotation || '0deg'})`;
+                    });
+                });
+
+                // Add animation
+                const animKeyframes = `
+    @keyframes float${i} {
+      0% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
+      25% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 90 - 45}deg); }
+      50% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 90 - 45}deg); }
+      75% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 90 - 45}deg); }
+      100% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
+    }
+  `;
+
+                const style = document.createElement('style');
+                style.textContent = animKeyframes;
+                document.head.appendChild(style);
+
+                particle.style.animation = `float${i} ${Math.random() * 20 + 10}s linear infinite`;
+            }
+            // Cursor follower effect
+            const cursorFollower = document.getElementById('cursor-follower');
+
+            // Enhanced water-like cursor effect
+            document.addEventListener('mousemove', (e) => {
+                // Show the cursor follower when mouse moves
+                if (cursorFollower.style.opacity === '0') {
+                    cursorFollower.style.opacity = '1';
+                }
+
+                // Position the follower with slight delay for water-like effect
+                setTimeout(() => {
+                    cursorFollower.style.left = e.clientX + 'px';
+                    cursorFollower.style.top = e.clientY + 'px';
+
+                    // Add more pronounced water-like distortion effect on movement
+                    const distortionFactor = Math.sin(Date.now() / 300) * 0.3;
+                    const pulseSize = 1 + Math.sin(Date.now() / 500) * 0.2;
+
+                    cursorFollower.style.transform = `translate(-50%, -50%) scale(${pulseSize}) skew(${distortionFactor}deg, ${distortionFactor}deg)`;
+
+                    // Add subtle glow color change
+                    const hue = (Date.now() / 50) % 360;
+                    cursorFollower.style.boxShadow = `0 0 15px rgba(${Math.sin(hue) * 30 + 70}, ${Math.sin(hue + 2) * 30 + 210}, ${Math.sin(hue + 4) * 30 + 254}, 0.6)`;
+                }, 80);
+
+                // Create ripple effect on mouse movement sometimes
+                if (Math.random() > 0.97) {
+                    const ripple = document.createElement('div');
+                    ripple.className = 'cursor-ripple';
+                    ripple.style.left = e.clientX + 'px';
+                    ripple.style.top = e.clientY + 'px';
+                    ripple.style.transform = 'translate(-50%, -50%)';
+                    document.body.appendChild(ripple);
+
+                    // Remove ripple after animation completes
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 1500);
+                }
+            });
+
+            // Events data
+            const eventsData = [
+                {
+                    title: "Orientation 2025",
+                    description: "Orientation 2025 marked the beginning of an exciting journey with the Code Conquerors coding community. The session welcomed new members, introduced them to the community’s mission, and set the stage for a year of learning, collaboration, and innovation.",
+                    image: "Assets/Orientation.jpg",
+                    position: "left"
+                },
+
+                {
+                    title: "Interview For New Members",
+                    description: "The Code Conquerors community conducted interviews to welcome new talent into the team. The session focused on identifying passionate coders, creative thinkers, and enthusiastic learners ready to contribute and grow together.",
+                    image: "Assets/Interview.jpg",
+                    position: "right"
+                },                
+                {
+                    title: "Workshop: HTML, CSS & JavaScript",
+                    description: "The Code Conquerors community organized an interactive workshop on HTML, CSS, and JavaScript. Designed for beginners and enthusiasts alike, the session provided hands-on experience in building responsive web pages and understanding the core concepts of front-end development.",
+                    image: "Assets/JavaScriptWorkshop.jpg",
+                    position: "left"
+                },
+                
+                {
+                    title: "Coding Competition: Month One",
+                    description: "Kicking off the monthly coding challenge series, Month One of the Coding Competition pushed participants to think critically and code efficiently. Organized by the Code Conquerors community, the event tested problem-solving skills across various difficulty levels, encouraging healthy competition and continuous learning.",
+                    image: "Assets/CodingExam.jpg",
+                    position: "right"
+                },                
+                {
+                    title: "Prize Distribution: Month One",
+                    description: "The Prize Distribution ceremony celebrated the outstanding contributions and achievements within the Code Conquerors community. Awards were presented based on portfolio projects for the Web Development Team and performance in the coding competition conducted by the DSA/CP Team. The event recognized talent, dedication, and consistent effort across both domains.",
+                    image: "Assets/PrizeDistribution.jpg",
+                    position: "left"
+                }
+                
+            ];
+
+            // Create timeline events
+            const eventsTimeline = document.getElementById('events-timeline');
+
+            eventsData.forEach((event, index) => {
+                const eventElement = document.createElement('div');
+                eventElement.className = `timeline-event ${event.position}`;
+                eventElement.innerHTML = `
+          <div class="timeline-dot"></div>
+          <div class="timeline-event-content">
+            <h3 class="timeline-event-title">${event.title}</h3>
+            <img src="${event.image}" alt="${event.title}" class="timeline-event-image">
+            <p class="timeline-event-desc">${event.description}</p>
+          </div>
+        `;
+
+                // Animation delay
+                eventElement.style.animation = `fadeIn 0.6s ease forwards ${index * 0.2 + 1}s`;
+
+                eventsTimeline.appendChild(eventElement);
+            });
+
+            // Hamburger menu functionality
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('.nav');
+
+            if (hamburger) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    nav.classList.toggle('active');
+                });
+
+                // Close menu when link is clicked
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        hamburger.classList.remove('active');
+                        nav.classList.remove('active');
+                    });
+                });
+            }
+
+            // Scroll animation for timeline events
+            function checkScroll() {
+                const events = document.querySelectorAll('.timeline-event');
+
+                events.forEach(event => {
+                    const eventPosition = event.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.2;
+
+                    if (eventPosition < screenPosition) {
+                        event.style.opacity = '1';
+                        event.style.animation = 'fadeIn 0.8s ease forwards';
+                    }
+                });
+            }
+
+            // Initial check
+            checkScroll();
+
+            // Check on scroll
+            window.addEventListener('scroll', checkScroll);
+        });
+    </script>
+</body>
+
+</html>

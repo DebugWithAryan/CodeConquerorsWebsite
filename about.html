@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CodeCommunity | About Us</title>
+  <title>Code Conquerors | About Us</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap');
-    
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       font-family: 'Space Grotesk', sans-serif;
       background-color: #0a0e17;
@@ -83,17 +84,18 @@
     .nav-link.active::after {
       width: 100%;
     }
-    
+
     .particles-container {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
       z-index: 1;
+      pointer-events: none;
     }
-    
+
     .main-content {
       padding: 2rem;
       max-width: 1200px;
@@ -101,7 +103,7 @@
       position: relative;
       z-index: 10;
     }
-    
+
     .page-title {
       font-family: 'JetBrains Mono', monospace;
       font-size: 2.5rem;
@@ -132,19 +134,19 @@
         transform: translateY(0);
       }
     }
-    
+
     .about-content {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 3rem;
     }
-    
+
     .about-text {
       opacity: 0;
       transform: translateY(30px);
       animation: fadeIn 0.8s ease forwards 0.7s;
     }
-    
+
     .about-card {
       background: rgba(18, 24, 38, 0.8);
       border-radius: 8px;
@@ -157,19 +159,19 @@
       transform: translateY(30px);
       animation: fadeIn 0.8s ease forwards;
     }
-    
+
     .about-card:nth-child(1) {
       animation-delay: 0.7s;
     }
-    
+
     .about-card:nth-child(2) {
       animation-delay: 0.9s;
     }
-    
+
     .about-card:nth-child(3) {
       animation-delay: 1.1s;
     }
-    
+
     .about-card::before {
       content: '';
       position: absolute;
@@ -182,16 +184,17 @@
       transform-origin: top;
       transition: transform 0.3s ease;
     }
-    
+
     .about-card:hover::before {
       transform: scaleY(1);
     }
-    
+
     .about-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(79, 172, 254, 0.4);
+      border-color: rgba(79, 172, 254, 0.6);
     }
-    
+
     .card-title {
       font-family: 'JetBrains Mono', monospace;
       font-size: 1.5rem;
@@ -199,7 +202,7 @@
       color: #4facfe;
       position: relative;
     }
-    
+
     .card-title::after {
       content: '';
       position: absolute;
@@ -209,21 +212,21 @@
       height: 3px;
       background: linear-gradient(90deg, #4facfe, #00f2fe);
     }
-    
+
     .card-content {
       line-height: 1.6;
       margin-top: 1.5rem;
     }
-    
+
     .card-content p {
       margin-bottom: 1rem;
     }
-    
+
     .highlight {
       color: #4facfe;
       font-weight: 500;
     }
-    
+
     .terminal {
       background-color: rgba(18, 24, 38, 0.8);
       border-radius: 6px;
@@ -239,7 +242,7 @@
       animation: fadeIn 0.8s ease forwards 1.3s;
       box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
     }
-    
+
     .terminal-header {
       display: flex;
       align-items: center;
@@ -247,63 +250,76 @@
       border-bottom: 1px solid #2a3a5a;
       padding-bottom: 5px;
     }
-    
+
+    .terminal:hover {
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
+      border-color: rgba(79, 172, 254, 0.6);
+    }
+
     .terminal-circle {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       margin-right: 5px;
     }
-    
-    .terminal-red { background-color: #ff5f56; }
-    .terminal-yellow { background-color: #ffbd2e; }
-    .terminal-green { background-color: #27c93f; }
-    
+
+    .terminal-red {
+      background-color: #ff5f56;
+    }
+
+    .terminal-yellow {
+      background-color: #ffbd2e;
+    }
+
+    .terminal-green {
+      background-color: #27c93f;
+    }
+
     .terminal-title {
       margin-left: 10px;
       font-size: 0.7rem;
       color: #6c7a94;
     }
-    
+
     .terminal-content {
       font-size: 0.7rem;
       line-height: 1.6;
       white-space: pre-wrap;
     }
-    
+
     .code-line {
       display: block;
     }
-    
+
     .terminal-path {
       color: #4facfe;
       margin-right: 5px;
     }
-    
+
     .terminal-prompt {
       color: #a6c1ee;
       margin-right: 5px;
     }
-    
+
     .terminal-command {
       color: #e0e0ff;
     }
-    
+
     .terminal-response {
       color: #91ff91;
       padding-left: 15px;
     }
-    
+
     .team-section {
       margin-top: 4rem;
     }
-    
+
     .team-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 2rem;
     }
-    
+
     .team-member {
       background: rgba(18, 24, 38, 0.8);
       border-radius: 8px;
@@ -314,12 +330,12 @@
       transform: translateY(30px);
       transition: all 0.3s ease;
     }
-    
+
     .team-member:hover {
       transform: translateY(-10px);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     }
-    
+
     .member-img {
       width: 120px;
       height: 120px;
@@ -328,34 +344,34 @@
       margin: 0 auto 1rem;
       border: 3px solid transparent;
       background: linear-gradient(#0a0e17, #0a0e17) padding-box,
-                  linear-gradient(90deg, #4facfe, #00f2fe) border-box;
+        linear-gradient(90deg, #4facfe, #00f2fe) border-box;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #4facfe;
       font-size: 2rem;
     }
-    
+
     .member-name {
       font-family: 'JetBrains Mono', monospace;
       font-size: 1.2rem;
       margin-bottom: 0.5rem;
       color: #4facfe;
     }
-    
+
     .member-role {
       font-size: 0.9rem;
       color: #a6c1ee;
       margin-bottom: 1rem;
     }
-    
+
     .member-social {
       display: flex;
       justify-content: center;
       gap: 0.7rem;
       margin-top: 1rem;
     }
-    
+
     .social-link {
       width: 30px;
       height: 30px;
@@ -367,19 +383,57 @@
       color: #4facfe;
       transition: all 0.3s ease;
     }
-    
+
     .social-link:hover {
       background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
       color: #0a0e17;
       transform: translateY(-3px);
     }
-    
+
+
+    /* Cursor following effect */
+    .cursor-follower {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(0, 242, 254, 0.2);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .cursor-ripple {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 242, 254, 0.6);
+      animation: ripple 1.5s ease-out infinite;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0.5);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
     .timeline {
       position: relative;
       max-width: 800px;
       margin: 4rem auto 0;
     }
-    
+
     .timeline::after {
       content: '';
       position: absolute;
@@ -390,7 +444,7 @@
       left: 50%;
       margin-left: -2px;
     }
-    
+
     .timeline-container {
       padding: 10px 40px;
       position: relative;
@@ -398,17 +452,17 @@
       opacity: 0;
       transition: all 0.3s ease;
     }
-    
+
     .timeline-container.left {
       left: 0;
       transform: translateX(-50px);
     }
-    
+
     .timeline-container.right {
       left: 50%;
       transform: translateX(50px);
     }
-    
+
     .timeline-container::after {
       content: '';
       position: absolute;
@@ -419,15 +473,15 @@
       top: 15px;
       z-index: 1;
     }
-    
+
     .timeline-container.left::after {
       right: -10px;
     }
-    
+
     .timeline-container.right::after {
       left: -10px;
     }
-    
+
     .timeline-content {
       padding: 20px;
       background: rgba(18, 24, 38, 0.8);
@@ -435,18 +489,23 @@
       border: 1px solid #2a3a5a;
       position: relative;
     }
-    
+
+    .timeline-content:hover {
+      box-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
+      border-color: rgba(0, 242, 254, 0.6);
+    }
+
     .timeline-date {
       font-family: 'JetBrains Mono', monospace;
       color: #4facfe;
       margin-bottom: 0.5rem;
     }
-    
+
     .timeline-title {
       font-family: 'JetBrains Mono', monospace;
       margin-bottom: 0.5rem;
     }
-    
+
     .tech-icon {
       position: absolute;
       width: 40px;
@@ -457,165 +516,239 @@
     }
 
     .social-section {
-        margin-top: 4rem;
-        padding-bottom: 3rem;
-      }
-      
+      margin-top: 4rem;
+      padding-bottom: 3rem;
+    }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+
+    .social-card {
+      background: rgba(18, 24, 38, 0.8);
+      border-radius: 8px;
+      border: 1px solid #2a3a5a;
+      padding: 2rem;
+      text-align: center;
+      opacity: 0;
+      transition: all 0.3s ease;
+      color: #e0e0ff;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s ease;
+    }
+
+    .social-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 25px rgba(79, 172, 254, 0.4);
+      border-color: rgba(0, 242, 254, 0.7);
+    }
+
+    .social-card:hover::before {
+      transform: scaleY(1);
+    }
+
+    .social-icon {
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+      transition: all 0.3s ease;
+    }
+
+    .social-card:hover .social-icon {
+      transform: scale(1.2);
+    }
+
+    .social-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: #4facfe;
+    }
+
+    .social-card p {
+      font-size: 0.9rem;
+      color: #a6c1ee;
+    }
+
+    /* Social Card Colors */
+    .social-card.github:hover {
+      background: rgba(36, 41, 46, 0.2);
+    }
+
+    .social-card.discord:hover {
+      background: rgba(114, 137, 218, 0.2);
+    }
+
+    .social-card.twitter:hover {
+      background: rgba(29, 161, 242, 0.2);
+    }
+
+    .social-card.linkedin:hover {
+      background: rgba(0, 119, 181, 0.2);
+    }
+
+    @media (max-width: 768px) {
       .social-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 2rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
       }
-      
-      .social-card {
-        background: rgba(18, 24, 38, 0.8);
-        border-radius: 8px;
-        border: 1px solid #2a3a5a;
-        padding: 2rem;
-        text-align: center;
-        opacity: 0;
-        transition: all 0.3s ease;
-        color: #e0e0ff;
-        text-decoration: none;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
+    }
+
+    @media (max-width: 480px) {
+      .social-grid {
+        grid-template-columns: 1fr;
       }
-      
-      .social-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 4px;
-        height: 100%;
-        background: linear-gradient(180deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
-        transform: scaleY(0);
-        transform-origin: top;
-        transition: transform 0.3s ease;
-      }
-      
-      .social-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-      }
-      
-      .social-card:hover::before {
-        transform: scaleY(1);
-      }
-      
-      .social-icon {
-        margin-bottom: 1.5rem;
-        filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
-        transition: all 0.3s ease;
-      }
-      
-      .social-card:hover .social-icon {
-        transform: scale(1.2);
-      }
-      
-      .social-name {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 1.2rem;
-        margin-bottom: 0.5rem;
-        color: #4facfe;
-      }
-      
-      .social-card p {
-        font-size: 0.9rem;
-        color: #a6c1ee;
-      }
-      
-      /* Social Card Colors */
-      .social-card.github:hover {
-        background: rgba(36, 41, 46, 0.2);
-      }
-      
-      .social-card.discord:hover {
-        background: rgba(114, 137, 218, 0.2);
-      }
-      
-      .social-card.twitter:hover {
-        background: rgba(29, 161, 242, 0.2);
-      }
-      
-      .social-card.linkedin:hover {
-        background: rgba(0, 119, 181, 0.2);
-      }
-      
-      @media (max-width: 768px) {
-        .social-grid {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 1.5rem;
-        }
-      }
-      
-      @media (max-width: 480px) {
-        .social-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-    
+    }
+
     @media (max-width: 768px) {
       .about-content {
         grid-template-columns: 1fr;
       }
-      
+
       .team-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
       }
-      
+
       .timeline::after {
         left: 31px;
       }
-      
+
       .timeline-container {
         width: 100%;
         padding-left: 70px;
         padding-right: 25px;
       }
-      
+
       .timeline-container.left {
         left: 0;
       }
-      
+
       .timeline-container.right {
         left: 0;
       }
-      
-      .timeline-container.left::after, 
+
+      .timeline-container.left::after,
       .timeline-container.right::after {
         left: 21px;
       }
     }
-    
+
     @media (max-width: 480px) {
       .team-grid {
         grid-template-columns: 1fr;
       }
     }
+
+    /* Mobile Navigation styles */
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      z-index: 101;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: #e0e0ff;
+      margin: 5px 0;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: block;
+      }
+
+      .nav {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        width: 70%;
+        height: 100vh;
+        background: rgba(18, 24, 38, 0.95);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: right 0.5s ease;
+        z-index: 100;
+        border-left: 1px solid #2a3a5a;
+        backdrop-filter: blur(10px);
+      }
+
+      .nav.active {
+        right: 0;
+      }
+
+      .nav-link {
+        margin: 1.5rem 0;
+        font-size: 1.2rem;
+      }
+
+      .hamburger.active div:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+        background-color: #4facfe;
+      }
+
+      .hamburger.active div:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active div:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+        background-color: #4facfe;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="particles-container" id="particles"></div>
-  
+
+  <!-- Cursor follower elements -->
+  <div class="cursor-follower" id="cursor-follower">
+    <div class="cursor-ripple"></div>
+  </div>
+
   <header class="header">
-    <a href="index.html" class="logo">CodeCommunity</a>
+    <a href="index.html" class="logo">Code Conquerors</a>
+    <div class="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
     <nav class="nav">
       <a href="index.html" class="nav-link">Home</a>
-      <a href="about.html" class="nav-link active">About</a>
+      <a href="about.html" class="nav-link active">About Us</a>
+      <a href="team.html" class="nav-link">Teams</a>
       <a href="projects.html" class="nav-link">Projects</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </nav>
+      <a href="events.html" class="nav-link ">Events</a>
+      <a href="contact.html" class="nav-link">Contacts</a>
+  </nav>
   </header>
-  
+
   <main class="main-content">
     <h1 class="page-title">About Us</h1>
     <p class="subtitle">Building a community of coders, innovators, and tech visionaries since 2024</p>
-    
+
     <div class="about-content">
       <div class="about-text">
         <div class="terminal">
@@ -626,150 +759,129 @@
             <span class="terminal-title">our-mission.js</span>
           </div>
           <div class="terminal-content">
-            <span class="code-line"><span class="terminal-path">~/codecommunity $</span> <span class="terminal-command">node our-mission.js</span></span>
+            <span class="code-line"><span class="terminal-path">~/codecommunity $</span> <span
+                class="terminal-command">node our-mission.js</span></span>
             <span class="code-line"><span class="terminal-response">/**</span></span>
-            <span class="code-line"><span class="terminal-response"> * At CodeCommunity, we believe coding is</span></span>
-            <span class="code-line"><span class="terminal-response"> * more than syntax; it's about community,</span></span>
+            <span class="code-line"><span class="terminal-response"> * At CodeCommunity, we believe coding
+                is</span></span>
+            <span class="code-line"><span class="terminal-response"> * more than syntax; it's about
+                community,</span></span>
             <span class="code-line"><span class="terminal-response"> * creativity and collaboration.</span></span>
             <span class="code-line"><span class="terminal-response"> */</span></span>
             <span class="code-line"><span class="terminal-response">connecting developers globally...</span></span>
             <span class="code-line"><span class="terminal-response">empowering through education...</span></span>
             <span class="code-line"><span class="terminal-response">fostering innovation...</span></span>
-            <span class="code-line"><span class="terminal-path">~/codecommunity $</span> <span class="terminal-command">_</span></span>
+            <span class="code-line"><span class="terminal-path">~/codecommunity $</span> <span
+                class="terminal-command">_</span></span>
           </div>
         </div>
-        
+
         <div class="about-card">
           <h2 class="card-title">Our Story</h2>
           <div class="card-content">
-            <p>CodeCommunity was born from a simple idea: <span class="highlight">code is better when we build together</span>. In early 2024, a group of passionate developers from across the globe connected online with a shared vision of creating a space where coders of all levels could learn, collaborate, and innovate.</p>
-            <p>What started as a small Discord server quickly evolved into a thriving ecosystem of developers, designers, and tech enthusiasts united by their love for coding and problem-solving.</p>
+            <p>CodeCommunity was born from a simple idea: <span class="highlight">code is better when we build
+                together</span>. In early 2024, a group of passionate developers from across the globe connected online
+              with a shared vision of creating a space where coders of all levels could learn, collaborate, and
+              innovate.</p>
+            <p>What started as a small Discord server quickly evolved into a thriving ecosystem of developers,
+              designers, and tech enthusiasts united by their love for coding and problem-solving.</p>
           </div>
         </div>
-        
+
         <div class="about-card">
           <h2 class="card-title">Our Mission</h2>
           <div class="card-content">
-            <p>We're on a mission to democratize coding education and build bridges between developers worldwide. Through mentorship programs, collaborative projects, and community-driven learning, we aim to empower the next generation of tech innovators.</p>
-            <p>Our community is guided by core values of <span class="highlight">inclusivity</span>, <span class="highlight">knowledge-sharing</span>, and <span class="highlight">continuous growth</span>.</p>
+            <p>We're on a mission to democratize coding education and build bridges between developers worldwide.
+              Through mentorship programs, collaborative projects, and community-driven learning, we aim to empower the
+              next generation of tech innovators.</p>
+            <p>Our community is guided by core values of <span class="highlight">inclusivity</span>, <span
+                class="highlight">knowledge-sharing</span>, and <span class="highlight">continuous growth</span>.</p>
           </div>
         </div>
       </div>
-      
+
       <div class="about-text">
         <div class="about-card">
           <h2 class="card-title">What We Do</h2>
           <div class="card-content">
-            <p><span class="highlight">Learn Together:</span> From beginner-friendly tutorials to advanced workshops, our educational resources cater to coders at every stage of their journey.</p>
-            <p><span class="highlight">Build Together:</span> Our collaborative projects and hackathons provide hands-on experience and the opportunity to work with diverse teams.</p>
-            <p><span class="highlight">Grow Together:</span> Through mentorship programs, code reviews, and career guidance, we help members reach their full potential.</p>
+            <p><span class="highlight">Learn Together:</span> From beginner-friendly tutorials to advanced workshops,
+              our educational resources cater to coders at every stage of their journey.</p>
+            <p><span class="highlight">Build Together:</span> Our collaborative projects and hackathons provide hands-on
+              experience and the opportunity to work with diverse teams.</p>
+            <p><span class="highlight">Grow Together:</span> Through mentorship programs, code reviews, and career
+              guidance, we help members reach their full potential.</p>
           </div>
         </div>
-        
+
         <div class="about-card">
           <h2 class="card-title">Community Values</h2>
           <div class="card-content">
-            <p><span class="highlight">Inclusivity:</span> We believe everyone deserves a seat at the table. Our community welcomes coders from all backgrounds, experience levels, and walks of life.</p>
-            <p><span class="highlight">Excellence:</span> We strive for quality in everything we do, from the code we write to the learning materials we develop.</p>
-            <p><span class="highlight">Innovation:</span> We embrace new technologies and approaches, always pushing the boundaries of what's possible.</p>
+            <p><span class="highlight">Inclusivity:</span> We believe everyone deserves a seat at the table. Our
+              community welcomes coders from all backgrounds, experience levels, and walks of life.</p>
+            <p><span class="highlight">Excellence:</span> We strive for quality in everything we do, from the code we
+              write to the learning materials we develop.</p>
+            <p><span class="highlight">Innovation:</span> We embrace new technologies and approaches, always pushing the
+              boundaries of what's possible.</p>
           </div>
         </div>
-        
+
         <div class="about-card">
           <h2 class="card-title">Join Our Journey</h2>
           <div class="card-content">
-            <p>Whether you're taking your first steps in coding or you're a seasoned developer looking to give back, there's a place for you in our community.</p>
-            <p>Together, we're building more than just code—we're building connections, careers, and the future of technology.</p>
+            <p>Whether you're taking your first steps in coding or you're a seasoned developer looking to give back,
+              there's a place for you in our community.</p>
+            <p>Together, we're building more than just code—we're building connections, careers, and the future of
+              technology.</p>
           </div>
         </div>
       </div>
     </div>
-    
-    <div class="team-section">
-      <h2 class="page-title">Our Team</h2>
-      <p class="subtitle">Meet the passionate individuals behind CodeCommunity</p>
-      
-      <div class="team-grid">
-        <div class="team-member" style="animation: fadeIn 0.8s ease forwards 1.5s;">
-          <div class="member-img">JD</div>
-          <h3 class="member-name">Jane Doe</h3>
-          <p class="member-role">Founder & Lead Developer</p>
-          <p>Full-stack developer with a passion for teaching and building meaningful applications.</p>
-          <div class="member-social">
-            <a href="#" class="social-link">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
-            </a>
-          </div>
-        </div>
-        
-        <div class="team-member" style="animation: fadeIn 0.8s ease forwards 1.7s;">
-          <div class="member-img">JS</div>
-          <h3 class="member-name">John Smith</h3>
-          <p class="member-role">Education Lead</p>
-          <p>Former CS professor with experience in curriculum development and EdTech innovation.</p>
-          <div class="member-social">
-            <a href="#" class="social-link">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
-            </a>
-          </div>
-        </div>
-        
-        <div class="team-member" style="animation: fadeIn 0.8s ease forwards 2.1s;">
-          <div class="member-img">MR</div>
-          <h3 class="member-name">Maria Rodriguez</h3>
-          <p class="member-role">Design Lead</p>
-          <p>UI/UX designer with a focus on creating intuitive and accessible interfaces.</p>
-          <div class="member-social">
-            <a href="#" class="social-link">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Replace teams section with just social media handles section -->
+
+
     <div class="social-section">
       <h2 class="page-title">Connect With Us</h2>
       <p class="subtitle">Join our community on these platforms</p>
-      
+
       <div class="social-grid">
         <a href="#" class="social-card github" style="animation: fadeIn 0.8s ease forwards 2.3s;">
           <div class="social-icon">
-            <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
           </div>
           <h3 class="social-name">GitHub</h3>
           <p>Explore our open-source projects</p>
         </a>
-        
+
         <a href="#" class="social-card discord" style="animation: fadeIn 0.8s ease forwards 2.5s;">
           <div class="social-icon">
-            <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor"><path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"/></svg>
+            <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z" />
+            </svg>
           </div>
           <h3 class="social-name">Discord</h3>
           <p>Join our active Discord community</p>
         </a>
-        
+
         <a href="#" class="social-card twitter" style="animation: fadeIn 0.8s ease forwards 2.7s;">
           <div class="social-icon">
-            <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor"><path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/></svg>
+            <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
+            </svg>
           </div>
           <h3 class="social-name">Twitter</h3>
           <p>Follow us for latest updates</p>
         </a>
-        
+
         <a href="#" class="social-card linkedin" style="animation: fadeIn 0.8s ease forwards 2.9s;">
           <div class="social-icon">
-            <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+            <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
+            </svg>
           </div>
           <h3 class="social-name">LinkedIn</h3>
           <p>Connect with our professional network</p>
@@ -777,14 +889,14 @@
       </div>
     </div>
   </main>
-  
+
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Create coding particles
       const particles = document.getElementById('particles');
       const codeSymbols = ['{', '}', ';', '()', '[]', '<>', '//', '=', '===', '=>', '+=', '&&', '||'];
       const colors = ['#4facfe', '#00f2fe', '#a6c1ee', '#f08fff', '#0ff0fc'];
-      
+
       for (let i = 0; i < 40; i++) {
         const particle = document.createElement('div');
         particle.textContent = codeSymbols[Math.floor(Math.random() * codeSymbols.length)];
@@ -800,13 +912,25 @@
         particle.style.zIndex = '2';
         particle.style.pointerEvents = 'none';
         particle.style.textShadow = '0 0 5px ' + colors[Math.floor(Math.random() * colors.length)];
-        
+
         // Animation
         particle.style.transition = 'all ' + (Math.random() * 5 + 10) + 's linear';
         particle.style.animationDuration = (Math.random() * 20 + 10) + 's';
         particle.style.animationTimingFunction = 'linear';
         particle.style.animationIterationCount = 'infinite';
-        
+
+        // Add to your script after the particles creation
+        window.addEventListener('scroll', () => {
+          const scrollY = window.scrollY;
+
+          // Move particles slightly when scrolling for parallax effect
+          const particlesElements = document.querySelectorAll('#particles > div');
+          particlesElements.forEach((particle, index) => {
+            // Apply different scroll speeds to different particles for layered effect
+            const speed = index % 3 === 0 ? 0.05 : (index % 3 === 1 ? 0.03 : 0.01);
+            particle.style.transform = `translateY(${-scrollY * speed}px) rotate(${particle.dataset.rotation || '0deg'})`;
+          });
+        });
         const animKeyframes = `
           @keyframes float${i} {
             0% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
@@ -816,83 +940,145 @@
             100% { transform: translate(0, 0) rotate(${Math.random() * 90 - 45}deg); }
           }
         `;
-        
+
         const style = document.createElement('style');
         style.textContent = animKeyframes;
         document.head.appendChild(style);
-        
+
         particle.style.animation = `float${i} ${Math.random() * 20 + 10}s linear infinite`;
-        
+
         particles.appendChild(particle);
       }
     });
 
     // Social Media Animations
-document.addEventListener('DOMContentLoaded', function() {
-    // Get all social cards
-    const socialCards = document.querySelectorAll('.social-card');
-    
-    // Add hover animations
-    socialCards.forEach((card) => {
-      card.addEventListener('mouseenter', function() {
-        // Create glow effect
-        const glow = document.createElement('div');
-        glow.className = 'card-glow';
-        glow.style.position = 'absolute';
-        glow.style.width = '100%';
-        glow.style.height = '100%';
-        glow.style.top = '0';
-        glow.style.left = '0';
-        glow.style.backgroundImage = 'radial-gradient(circle at 50% 50%, rgba(79, 172, 254, 0.4) 0%, rgba(0, 242, 254, 0.1) 40%, transparent 70%)';
-        glow.style.opacity = '0';
-        glow.style.transition = 'opacity 0.5s ease';
-        glow.style.zIndex = '0';
-        glow.style.pointerEvents = 'none';
-        
-        this.style.zIndex = '10';
-        this.appendChild(glow);
-        
-        setTimeout(() => {
-          glow.style.opacity = '1';
-        }, 50);
-      });
-      
-      card.addEventListener('mouseleave', function() {
-        const glow = this.querySelector('.card-glow');
-        if (glow) {
+    document.addEventListener('DOMContentLoaded', function () {
+      // Get all social cards
+      const socialCards = document.querySelectorAll('.social-card');
+
+      // Add hover animations
+      socialCards.forEach((card) => {
+        card.addEventListener('mouseenter', function () {
+          // Create glow effect
+          const glow = document.createElement('div');
+          glow.className = 'card-glow';
+          glow.style.position = 'absolute';
+          glow.style.width = '100%';
+          glow.style.height = '100%';
+          glow.style.top = '0';
+          glow.style.left = '0';
+          glow.style.backgroundImage = 'radial-gradient(circle at 50% 50%, rgba(79, 172, 254, 0.4) 0%, rgba(0, 242, 254, 0.1) 40%, transparent 70%)';
           glow.style.opacity = '0';
+          glow.style.transition = 'opacity 0.5s ease';
+          glow.style.zIndex = '0';
+          glow.style.pointerEvents = 'none';
+
+          this.style.zIndex = '10';
+          this.appendChild(glow);
+
           setTimeout(() => {
-            glow.remove();
-          }, 500);
-        }
-        this.style.zIndex = '1';
+            glow.style.opacity = '1';
+          }, 50);
+        });
+
+        card.addEventListener('mouseleave', function () {
+          const glow = this.querySelector('.card-glow');
+          if (glow) {
+            glow.style.opacity = '0';
+            setTimeout(() => {
+              glow.remove();
+            }, 500);
+          }
+          this.style.zIndex = '1';
+        });
+
+        // Add click effect
+        card.addEventListener('click', function () {
+          this.style.transform = 'scale(0.95) translateY(-10px)';
+          setTimeout(() => {
+            this.style.transform = 'translateY(-10px)';
+          }, 150);
+        });
       });
-      
-      // Add click effect
-      card.addEventListener('click', function() {
-        this.style.transform = 'scale(0.95) translateY(-10px)';
+
+      // Cursor follower effect
+      const cursorFollower = document.getElementById('cursor-follower');
+
+      // Enhanced water-like cursor effect
+      document.addEventListener('mousemove', (e) => {
+        // Show the cursor follower when mouse moves
+        if (cursorFollower.style.opacity === '0') {
+          cursorFollower.style.opacity = '1';
+        }
+
+        // Position the follower with slight delay for water-like effect
         setTimeout(() => {
-          this.style.transform = 'translateY(-10px)';
-        }, 150);
-      });
-    });
-    
-    // Intersection Observer to animate in as user scrolls
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Don't add animation since it's already set in HTML
-          observer.unobserve(entry.target);
+          cursorFollower.style.left = e.clientX + 'px';
+          cursorFollower.style.top = e.clientY + 'px';
+
+          // Add more pronounced water-like distortion effect on movement
+          const distortionFactor = Math.sin(Date.now() / 300) * 0.3;
+          const pulseSize = 1 + Math.sin(Date.now() / 500) * 0.2;
+
+          cursorFollower.style.transform = `translate(-50%, -50%) scale(${pulseSize}) skew(${distortionFactor}deg, ${distortionFactor}deg)`;
+
+          // Add subtle glow color change
+          const hue = (Date.now() / 50) % 360;
+          cursorFollower.style.boxShadow = `0 0 15px rgba(${Math.sin(hue) * 30 + 70}, ${Math.sin(hue + 2) * 30 + 210}, ${Math.sin(hue + 4) * 30 + 254}, 0.6)`;
+        }, 80);
+
+        // Create ripple effect on mouse movement sometimes
+        if (Math.random() > 0.97) {
+          const ripple = document.createElement('div');
+          ripple.className = 'cursor-ripple';
+          ripple.style.left = e.clientX + 'px';
+          ripple.style.top = e.clientY + 'px';
+          ripple.style.transform = 'translate(-50%, -50%)';
+          document.body.appendChild(ripple);
+
+          // Remove ripple after animation completes
+          setTimeout(() => {
+            ripple.remove();
+          }, 1500);
         }
       });
-    }, {
-      threshold: 0.1
+
+
+      // Intersection Observer to animate in as user scrolls
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Don't add animation since it's already set in HTML
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      socialCards.forEach(card => {
+        observer.observe(card);
+      });
     });
-    
-    socialCards.forEach(card => {
-      observer.observe(card);
-    });
-  });
+
+    const hamburger = document.querySelector('.hamburger');
+    const nav = document.querySelector('.nav');
+
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        nav.classList.toggle('active');
+      });
+
+      // Close menu when link is clicked
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          nav.classList.remove('active');
+        });
+      });
+    }
   </script>
 </body>
+
 </html>
