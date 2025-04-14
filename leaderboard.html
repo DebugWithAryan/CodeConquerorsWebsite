@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeCommunity | Leaderboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0a0e17;
+            color: #e0e0ff;
+            min-height: 100vh;
+            width: 100vw;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: transparent;
+            background-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            font-family: 'JetBrains Mono', monospace;
+            color: #e0e0ff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #4facfe;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: #4facfe;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Cursor following effect */
+        .cursor-follower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 242, 254, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cursor-ripple {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 242, 254, 0.6);
+            animation: ripple 1.5s ease-out infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .page-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 1s ease forwards;
+            position: relative;
+            display: inline-block;
+            color: transparent;
+            background-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #a6c1ee 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Leaderboard styles */
+        .tabs-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background: rgba(18, 24, 38, 0.8);
+            border: 1px solid #2a3a5a;
+            border-radius: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #e0e0ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            background: rgba(79, 172, 254, 0.2);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .tab.active {
+            background: linear-gradient(45deg, rgba(79, 172, 254, 0.3), rgba(0, 242, 254, 0.3));
+            border-color: #4facfe;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            color: #4facfe;
+        }
+
+        .domain-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .domain-section.active {
+            display: block;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .leaderboard-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            color: #4facfe;
+        }
+
+        .date-picker {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .date-btn {
+            background: rgba(18, 24, 38, 0.8);
+            border: 1px solid #2a3a5a;
+            color: #e0e0ff;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date-btn:hover {
+            background: rgba(79, 172, 254, 0.2);
+            border-color: #4facfe;
+        }
+
+        .date-btn.active {
+            background: linear-gradient(45deg, rgba(79, 172, 254, 0.3), rgba(0, 242, 254, 0.3));
+            border-color: #4facfe;
+            color: #4facfe;
+        }
+
+        /* Top 3 podium */
+        .top-performers {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin: 3rem 0;
+            height: 320px;
+            position: relative;
+        }
+
+        .podium-place {
+            position: relative;
+            width: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .podium-place:hover {
+            transform: translateY(-10px);
+        }
+
+        .podium-bar {
+            width: 120px;
+            background: linear-gradient(180deg, rgba(79, 172, 254, 0.8) 0%, rgba(0, 242, 254, 0.8) 100%);
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+            position: relative;
+            overflow: hidden;
+            height: 0;
+        }
+
+        .podium-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+        }
+
+        .podium-bar.first {
+            animation: growBar 1.5s ease forwards 0.3s;
+        }
+
+        .podium-bar.second {
+            animation: growBar 1.5s ease forwards 0.6s;
+            background: linear-gradient(180deg, rgba(166, 193, 238, 0.8) 0%, rgba(140, 167, 213, 0.8) 100%);
+        }
+
+        .podium-bar.third {
+            animation: growBar 1.5s ease forwards 0.9s;
+            background: linear-gradient(180deg, rgba(240, 143, 255, 0.8) 0%, rgba(200, 123, 215, 0.8) 100%);
+        }
+
+        @keyframes growBar {
+            0% {
+                height: 0;
+            }
+
+            50% {
+                height: var(--target-height);
+                transform: scaleY(1.05);
+            }
+
+            70% {
+                transform: scaleY(0.97);
+            }
+
+            100% {
+                height: var(--target-height);
+                transform: scaleY(1);
+            }
+        }
+
+        .position-indicator {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            background: rgba(10, 14, 23, 0.7);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: -20px;
+            border: 2px solid;
+        }
+
+        .position-indicator.first {
+            border-color: #4facfe;
+            box-shadow: 0 0 15px rgba(79, 172, 254, 0.8);
+        }
+
+        .position-indicator.second {
+            border-color: #a6c1ee;
+            box-shadow: 0 0 15px rgba(166, 193, 238, 0.8);
+        }
+
+        .position-indicator.third {
+            border-color: #f08fff;
+            box-shadow: 0 0 15px rgba(240, 143, 255, 0.8);
+        }
+
+        .participant-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid;
+            margin-bottom: 1rem;
+            transform: scale(0);
+            animation: popIn 0.5s ease forwards 1.2s;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+            }
+
+            60% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .participant-avatar.first {
+            border-color: #4facfe;
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.8);
+        }
+
+        .participant-avatar.second {
+            border-color: #a6c1ee;
+            box-shadow: 0 0 20px rgba(166, 193, 238, 0.8);
+        }
+
+        .participant-avatar.third {
+            border-color: #f08fff;
+            box-shadow: 0 0 20px rgba(240, 143, 255, 0.8);
+        }
+
+        .participant-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards 1.5s;
+        }
+
+        .participant-score {
+            background: rgba(18, 24, 38, 0.8);
+            border: 1px solid;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards 1.7s;
+        }
+
+        .participant-score.first {
+            border-color: #4facfe;
+            color: #4facfe;
+        }
+
+        .participant-score.second {
+            border-color: #a6c1ee;
+            color: #a6c1ee;
+        }
+
+        .participant-score.third {
+            border-color: #f08fff;
+            color: #f08fff;
+        }
+
+        .podium-base {
+            background: rgba(18, 24, 38, 0.8);
+            border: 1px solid #2a3a5a;
+            height: 30px;
+            width: 140px;
+            margin-top: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards 2s;
+        }
+
+        .podium-base::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                left: 100%;
+            }
+        }
+
+        .podium-place.first .podium-base {
+            background: linear-gradient(90deg, rgba(79, 172, 254, 0.3), rgba(0, 242, 254, 0.3));
+            border-color: #4facfe;
+        }
+
+        .podium-place.second .podium-base {
+            background: linear-gradient(90deg, rgba(166, 193, 238, 0.3), rgba(140, 167, 213, 0.3));
+            border-color: #a6c1ee;
+        }
+
+        .podium-place.third .podium-base {
+            background: linear-gradient(90deg, rgba(240, 143, 255, 0.3), rgba(200, 123, 215, 0.3));
+            border-color: #f08fff;
+        }
+
+        /* Lower rankings table */
+        .other-rankings {
+            background: rgba(18, 24, 38, 0.8);
+            border: 1px solid #2a3a5a;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 2.2s;
+        }
+
+        .rankings-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: #4facfe;
+        }
+
+        .rankings-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .rankings-table th,
+        .rankings-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #2a3a5a;
+        }
+
+        .rankings-table th {
+            font-family: 'JetBrains Mono', monospace;
+            color: #a6c1ee;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .rankings-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rankings-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .rankings-table tr:hover {
+            background: rgba(79, 172, 254, 0.1);
+        }
+
+        .rank {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 50px;
+        }
+
+        .participant {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .participant img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #2a3a5a;
+        }
+
+        .score {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #4facfe;
+        }
+
+        /* Loading bars */
+        .loading-bar {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            bottom: 10%;
+            left: 25%;
+            width: 0%;
+            opacity: 0.7;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.7);
+            z-index: 2;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .leaderboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .top-performers {
+                flex-direction: column;
+                align-items: center;
+                height: auto;
+                gap: 3rem;
+                margin: 4rem 0;
+            }
+
+            .podium-place {
+                width: 100%;
+            }
+
+            .podium-bar {
+                width: 80%;
+                max-width: 200px;
+            }
+
+            .podium-base {
+                width: 90%;
+                max-width: 220px;
+            }
+
+            .rankings-table th,
+            .rankings-table td {
+                padding: 0.8rem 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .participant img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .tabs-container {
+                gap: 0.5rem;
+            }
+
+            .tab {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Hamburger menu */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: #e0e0ff;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .nav {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                width: 70%;
+                height: 100vh;
+                background: rgba(18, 24, 38, 0.95);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: right 0.5s ease;
+                z-index: 100;
+                border-left: 1px solid #2a3a5a;
+                backdrop-filter: blur(10px);
+            }
+
+            .nav.active {
+                right: 0;
+            }
+
+            .nav-link {
+                margin: 1.5rem 0;
+                font-size: 1.2rem;
+            }
+
+            .hamburger.active div:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+                background-color: #4facfe;
+            }
+
+            .hamburger.active div:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active div:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+                background-color: #4facfe;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="particles-container" id="particles"></div>
+
+    <!-- Cursor follower elements -->
+    <div class="cursor-follower" id="cursor-follower">
+        <div class="cursor-ripple"></div>
+    </div>
+
+    <!-- Loading bars -->
+    <div class="loading-bar" id="loading-bar-1"></div>
+    <div class="loading-bar" id="loading-bar-2" style="left: 45%; width: 0%;"></div>
+
+    <header class="header">
+        <a href="index.html" class="logo">Code Conquerors</a>
+        <div class="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <nav class="nav">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link">About Us</a>
+            <a href="team.html" class="nav-link">Teams</a>
+            <a href="projects.html" class="nav-link">Projects</a>
+            <a href="events.html" class="nav-link">Events</a>
+            <a href="leaderboard.html" class="nav-link active">Leaderboard</a>
+            <a href="contact.html" class="nav-link">Contacts</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h1 class="page-title" id="page-title">Monthly Leaderboard</h1>
+        <p class="subtitle">Tracking the top performers across all domains</p>
+
+        <!-- Domain tabs -->
+        <div class="tabs-container">
+            <div class="tab active" data-domain="android">Android Dev</div>
+            <div class="tab" data-domain="web">Web Dev</div>
+            <div class="tab" data-domain="ai">AI/ML</div>
+            <div class="tab" data-domain="blockchain">Blockchain</div>
+            <div class="tab" data-domain="cloud">Cloud Computing</div>
+            <div class="tab" data-domain="overall">Overall</div>
+        </div>
+
+        <!-- Android Section -->
+        <div class="domain-section active" id="android-section">
+            <div class="leaderboard-header">
+                <h2 class="leaderboard-title">Android Development</h2>
+                <div class="date-picker">
+                    <button class="date-btn" data-month="march">March</button>
+                    <button class="date-btn active" data-month="april">April</button>
+                </div>
+            </div>
+
+            <!-- Top 3 podium -->
+            <div class="top-performers">
+                <!-- Second Place -->
+                <div class="podium-place second">
+                    <div class="podium-bar second" style="--target-height: 200px;">
+                        <div class="position-indicator second">2</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Rohan Sharma" class="participant-avatar second">
+                    <div class="participant-name">Rohan Sharma</div>
+                    <div class="participant-score second">850 points</div>
+                    <div class="podium-base">2nd Place</div>
+                </div>
+
+                <!-- First Place -->
+                <div class="podium-place first">
+                    <div class="podium-bar first" style="--target-height: 250px;">
+                        <div class="position-indicator first">1</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Aarav Patel" class="participant-avatar first">
+                    <div class="participant-name">Aarav Patel</div>
+                    <div class="participant-score first">920 points</div>
+                    <div class="podium-base">1st Place</div>
+                </div>
+
+                <!-- Third Place -->
+                <div class="podium-place third">
+                    <div class="podium-bar third" style="--target-height: 150px;">
+                        <div class="position-indicator third">3</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Neha Singh" class="participant-avatar third">
+                    <div class="participant-name">Neha Singh</div>
+                    <div class="participant-score third">740 points</div>
+                    <div class="podium-base">3rd Place</div>
+                </div>
+            </div>
+
+            <!-- Other rankings -->
+            <div class="other-rankings">
+                <h3 class="rankings-title">Other Rankings</h3>
+                <table class="rankings-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Participant</th>
+                            <th>Projects</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="rank">4</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Vikram Malhotra"> Vikram
+                                Malhotra</td>
+                            <td>5</td>
+                            <td class="score">685</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">5</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Aisha Khan"> Aisha Khan</td>
+                            <td>4</td>
+                            <td class="score">630</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">6</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Ravi Kumar"> Ravi Kumar</td>
+                            <td>3</td>
+                            <td class="score">590</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">7</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Priya Desai"> Priya Desai
+                            </td>
+                            <td>4</td>
+                            <td class="score">570</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">8</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Arjun Reddy"> Arjun Reddy
+                            </td>
+                            <td>3</td>
+                            <td class="score">510</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Web Dev Section -->
+        <div class="domain-section" id="web-section">
+            <div class="leaderboard-header">
+                <h2 class="leaderboard-title">Web Development</h2>
+                <div class="date-picker">
+                    <button class="date-btn" data-month="march">March</button>
+                    <button class="date-btn active" data-month="april">April</button>
+                </div>
+            </div>
+
+            <!-- Top 3 podium -->
+            <div class="top-performers">
+                <!-- Second Place -->
+                <div class="podium-place second">
+                    <div class="podium-bar second" style="--target-height: 180px;">
+                        <div class="position-indicator second">2</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Tanvi Gupta" class="participant-avatar second">
+                    <div class="participant-name">Tanvi Gupta</div>
+                    <div class="participant-score second">870 points</div>
+                    <div class="podium-base">2nd Place</div>
+                </div>
+
+                <!-- First Place -->
+                <div class="podium-place first">
+                    <div class="podium-bar first" style="--target-height: 230px;">
+                        <div class="position-indicator first">1</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Rahul Verma" class="participant-avatar first">
+                    <div class="participant-name">Rahul Verma</div>
+                    <div class="participant-score first">950 points</div>
+                    <div class="podium-base">1st Place</div>
+                </div>
+
+                <!-- Third Place -->
+                <div class="podium-place third">
+                    <div class="podium-bar third" style="--target-height: 140px;">
+                        <div class="position-indicator third">3</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Ananya Joshi" class="participant-avatar third">
+                    <div class="participant-name">Ananya Joshi</div>
+                    <div class="participant-score third">760 points</div>
+                    <div class="podium-base">3rd Place</div>
+                </div>
+            </div>
+
+            <!-- Other rankings -->
+            <div class="other-rankings">
+                <h3 class="rankings-title">Other Rankings</h3>
+                <table class="rankings-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Participant</th>
+                            <th>Projects</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="rank">4</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Karan Mehra"> Karan Mehra
+                            </td>
+                            <td>6</td>
+                            <td class="score">710</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">5</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Zoya Khan"> Zoya Khan</td>
+                            <td>5</td>
+                            <td class="score">650</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">6</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Dev Sharma"> Dev Sharma</td>
+                            <td>4</td>
+                            <td class="score">600</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">7</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Anjali Mehta"> Anjali Mehta
+                            </td>
+                            <td>3</td>
+                            <td class="score">580</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">8</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Kunal Shah"> Kunal Shah</td>
+                            <td>4</td>
+                            <td class="score">520</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- AI/ML Section -->
+        <div class="domain-section" id="ai-section">
+            <div class="leaderboard-header">
+                <h2 class="leaderboard-title">AI/ML Development</h2>
+                <div class="date-picker">
+                    <button class="date-btn" data-month="march">March</button>
+                    <button class="date-btn active" data-month="april">April</button>
+                </div>
+            </div>
+
+            <!-- Top 3 podium -->
+            <div class="top-performers">
+                <!-- Second Place -->
+                <div class="podium-place second">
+                    <div class="podium-bar second" style="--target-height: 190px;">
+                        <div class="position-indicator second">2</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Aditya Chopra" class="participant-avatar second">
+                    <div class="participant-name">Aditya Chopra</div>
+                    <div class="participant-score second">880 points</div>
+                    <div class="podium-base">2nd Place</div>
+                </div>
+
+                <!-- First Place -->
+                <div class="podium-place first">
+                    <div class="podium-bar first" style="--target-height: 240px;">
+                        <div class="position-indicator first">1</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Ishaan Malhotra" class="participant-avatar first">
+                    <div class="participant-name">Ishaan Malhotra</div>
+                    <div class="participant-score first">960 points</div>
+                    <div class="podium-base">1st Place</div>
+                </div>
+
+                <!-- Third Place -->
+                <div class="podium-place third">
+                    <div class="podium-bar third" style="--target-height: 150px;">
+                        <div class="position-indicator third">3</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Meera Iyer" class="participant-avatar third">
+                    <div class="participant-name">Meera Iyer</div>
+                    <div class="participant-score third">790 points</div>
+                    <div class="podium-base">3rd Place</div>
+                </div>
+            </div>
+
+            <!-- Other rankings -->
+            <div class="other-rankings">
+                <h3 class="rankings-title">Other Rankings</h3>
+                <table class="rankings-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Participant</th>
+                            <th>Projects</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="rank">4</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Vivek Nair"> Vivek Nair</td>
+                            <td>5</td>
+                            <td class="score">740</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">5</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Sanya Kapoor"> Sanya Kapoor
+                            </td>
+                            <td>4</td>
+                            <td class="score">680</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">6</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Raj Sharma"> Raj Sharma</td>
+                            <td>4</td>
+                            <td class="score">620</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">7</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Nisha Patel"> Nisha Patel
+                            </td>
+                            <td>3</td>
+                            <td class="score">590</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">8</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Aryan Singh"> Aryan Singh
+                            </td>
+                            <td>3</td>
+                            <td class="score">550</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Blockchain Section -->
+        <div class="domain-section" id="blockchain-section">
+            <div class="leaderboard-header">
+                <h2 class="leaderboard-title">Blockchain Development</h2>
+                <div class="date-picker">
+                    <button class="date-btn" data-month="march">March</button>
+                    <button class="date-btn active" data-month="april">April</button>
+                </div>
+            </div>
+
+            <!-- Top 3 podium -->
+            <div class="top-performers">
+                <!-- Second Place -->
+                <div class="podium-place second">
+                    <div class="podium-bar second" style="--target-height: 200px;">
+                        <div class="position-indicator second">2</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Vihaan Sharma" class="participant-avatar second">
+                    <div class="participant-name">Vihaan Sharma</div>
+                    <div class="participant-score second">840 points</div>
+                    <div class="podium-base">2nd Place</div>
+                </div>
+
+                <!-- First Place -->
+                <div class="podium-place first">
+                    <div class="podium-bar first" style="--target-height: 230px;">
+                        <div class="position-indicator first">1</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Aditi Choudhary" class="participant-avatar first">
+                    <div class="participant-name">Aditi Choudhary</div>
+                    <div class="participant-score first">910 points</div>
+                    <div class="podium-base">1st Place</div>
+                </div>
+
+                <!-- Third Place -->
+                <div class="podium-place third">
+                    <div class="podium-bar third" style="--target-height: 160px;">
+                        <div class="position-indicator third">3</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Kabir Jain" class="participant-avatar third">
+                    <div class="participant-name">Kabir Jain</div>
+                    <div class="participant-score third">770 points</div>
+                    <div class="podium-base">3rd Place</div>
+                </div>
+            </div>
+
+            <!-- Other rankings -->
+            <div class="other-rankings">
+                <h3 class="rankings-title">Other Rankings</h3>
+                <table class="rankings-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Participant</th>
+                            <th>Projects</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="rank">4</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Maya Desai"> Maya Desai</td>
+                            <td>4</td>
+                            <td class="score">720</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">5</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Sameer Ahuja"> Sameer Ahuja
+                            </td>
+                            <td>3</td>
+                            <td class="score">660</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">6</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Divya Menon"> Divya Menon
+                            </td>
+                            <td>4</td>
+                            <td class="score">610</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">7</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Rohan Kapoor"> Rohan Kapoor
+                            </td>
+                            <td>3</td>
+                            <td class="score">580</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">8</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Anisha Roy"> Anisha Roy</td>
+                            <td>3</td>
+                            <td class="score">530</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Cloud Computing Section -->
+        <div class="domain-section" id="cloud-section">
+            <div class="leaderboard-header">
+                <h2 class="leaderboard-title">Cloud Computing</h2>
+                <div class="date-picker">
+                    <button class="date-btn" data-month="march">March</button>
+                    <button class="date-btn active" data-month="april">April</button>
+                </div>
+            </div>
+
+            <!-- Top 3 podium -->
+            <div class="top-performers">
+                <!-- Second Place -->
+                <div class="podium-place second">
+                    <div class="podium-bar second" style="--target-height: 210px;">
+                        <div class="position-indicator second">2</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Varun Iyer" class="participant-avatar second">
+                    <div class="participant-name">Varun Iyer</div>
+                    <div class="participant-score second">860 points</div>
+                    <div class="podium-base">2nd Place</div>
+                </div>
+
+                <!-- First Place -->
+                <div class="podium-place first">
+                    <div class="podium-bar first" style="--target-height: 250px;">
+                        <div class="position-indicator first">1</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Swati Trivedi" class="participant-avatar first">
+                    <div class="participant-name">Swati Trivedi</div>
+                    <div class="participant-score first">930 points</div>
+                    <div class="podium-base">1st Place</div>
+                </div>
+
+                <!-- Third Place -->
+                <div class="podium-place third">
+                    <div class="podium-bar third" style="--target-height: 170px;">
+                        <div class="position-indicator third">3</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Arjun Mehta" class="participant-avatar third">
+                    <div class="participant-name">Arjun Mehta</div>
+                    <div class="participant-score third">800 points</div>
+                    <div class="podium-base">3rd Place</div>
+                </div>
+            </div>
+
+            <!-- Other rankings -->
+            <div class="other-rankings">
+                <h3 class="rankings-title">Other Rankings</h3>
+                <table class="rankings-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Participant</th>
+                            <th>Projects</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="rank">4</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Nikhil Raja"> Nikhil Raja
+                            </td>
+                            <td>5</td>
+                            <td class="score">750</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">5</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Shreya Gupta"> Shreya Gupta
+                            </td>
+                            <td>4</td>
+                            <td class="score">690</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">6</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Anand Pillai"> Anand Pillai
+                            </td>
+                            <td>4</td>
+                            <td class="score">640</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">7</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Pooja Shah"> Pooja Shah</td>
+                            <td>3</td>
+                            <td class="score">600</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">8</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Tarun Singh"> Tarun Singh
+                            </td>
+                            <td>3</td>
+                            <td class="score">560</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Overall Section -->
+        <div class="domain-section" id="overall-section">
+            <div class="leaderboard-header">
+                <h2 class="leaderboard-title">Overall Performance</h2>
+                <div class="date-picker">
+                    <button class="date-btn" data-month="march">March</button>
+                    <button class="date-btn active" data-month="april">April</button>
+                </div>
+            </div>
+
+            <!-- Top 3 podium -->
+            <div class="top-performers">
+                <!-- Second Place -->
+                <div class="podium-place second">
+                    <div class="podium-bar second" style="--target-height: 220px;">
+                        <div class="position-indicator second">2</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Swati Trivedi" class="participant-avatar second">
+                    <div class="participant-name">Swati Trivedi</div>
+                    <div class="participant-score second">1880 points</div>
+                    <div class="podium-base">2nd Place</div>
+                </div>
+
+                <!-- First Place -->
+                <div class="podium-place first">
+                    <div class="podium-bar first" style="--target-height: 250px;">
+                        <div class="position-indicator first">1</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Ishaan Malhotra" class="participant-avatar first">
+                    <div class="participant-name">Ishaan Malhotra</div>
+                    <div class="participant-score first">1960 points</div>
+                    <div class="podium-base">1st Place</div>
+                </div>
+
+                <!-- Third Place -->
+                <div class="podium-place third">
+                    <div class="podium-bar third" style="--target-height: 190px;">
+                        <div class="position-indicator third">3</div>
+                    </div>
+                    <img src="/api/placeholder/80/80" alt="Aditi Choudhary" class="participant-avatar third">
+                    <div class="participant-name">Aditi Choudhary</div>
+                    <div class="participant-score third">1810 points</div>
+                    <div class="podium-base">3rd Place</div>
+                </div>
+            </div>
+
+            <!-- Other rankings -->
+            <div class="other-rankings">
+                <h3 class="rankings-title">Other Rankings</h3>
+                <table class="rankings-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Participant</th>
+                            <th>Total Projects</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="rank">4</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Rahul Verma"> Rahul Verma
+                            </td>
+                            <td>12</td>
+                            <td class="score">1750</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">5</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Aarav Patel"> Aarav Patel
+                            </td>
+                            <td>10</td>
+                            <td class="score">1720</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">6</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Tanvi Gupta"> Tanvi Gupta
+                            </td>
+                            <td>11</td>
+                            <td class="score">1680</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">7</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Varun Iyer"> Varun Iyer</td>
+                            <td>9</td>
+                            <td class="score">1640</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">8</td>
+                            <td class="participant"><img src="/api/placeholder/40/40" alt="Aditya Chopra"> Aditya Chopra
+                            </td>
+                            <td>10</td>
+                            <td class="score">1600</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Cursor follower effect
+        document.addEventListener('DOMContentLoaded', function () {
+            const cursorFollower = document.getElementById('cursor-follower');
+            const body = document.querySelector('body');
+
+            // Set initial position to center of screen to avoid jumps
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let currentX = mouseX;
+            let currentY = mouseY;
+
+            // Show cursor follower when mouse moves
+            body.addEventListener('mousemove', function (e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                cursorFollower.style.opacity = '1';
+            });
+
+            // Smooth animation for cursor follower
+            function animate() {
+                let dx = mouseX - currentX;
+                let dy = mouseY - currentY;
+
+                currentX += dx * 0.1;
+                currentY += dy * 0.1;
+
+                cursorFollower.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            // Hide cursor follower when mouse leaves window
+            body.addEventListener('mouseleave', function () {
+                cursorFollower.style.opacity = '0';
+            });
+
+            // Domain tabs functionality
+            const tabs = document.querySelectorAll('.tab');
+            const sections = document.querySelectorAll('.domain-section');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    const domain = this.getAttribute('data-domain');
+
+                    // Deactivate all tabs and sections
+                    tabs.forEach(t => t.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+
+                    // Activate clicked tab and corresponding section
+                    this.classList.add('active');
+                    document.getElementById(`${domain}-section`).classList.add('active');
+                });
+            });
+
+            // Date picker functionality
+            const dateBtns = document.querySelectorAll('.date-btn');
+
+            dateBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const parent = this.closest('.date-picker');
+                    const btns = parent.querySelectorAll('.date-btn');
+
+                    btns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Here you would typically fetch new data based on the selected month
+                    // For demo purposes, we'll just show a console message
+                    console.log(`Showing data for ${this.getAttribute('data-month')}`);
+                });
+            });
+
+            // Hamburger menu functionality
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('.nav');
+
+            hamburger.addEventListener('click', function () {
+                hamburger.classList.toggle('active');
+                nav.classList.toggle('active');
+            });
+
+            // Animate loading bars
+            const loadingBar1 = document.getElementById('loading-bar-1');
+            const loadingBar2 = document.getElementById('loading-bar-2');
+
+            // Animate first loading bar
+            setTimeout(() => {
+                loadingBar1.style.transition = 'width 2s ease-in-out';
+                loadingBar1.style.width = '30%';
+            }, 500);
+
+            setTimeout(() => {
+                loadingBar1.style.transition = 'width 1s ease-in-out';
+                loadingBar1.style.width = '70%';
+            }, 2500);
+
+            setTimeout(() => {
+                loadingBar1.style.transition = 'width 0.5s ease-in-out';
+                loadingBar1.style.width = '100%';
+
+                setTimeout(() => {
+                    loadingBar1.style.opacity = '0';
+                }, 600);
+            }, 3500);
+
+            // Animate second loading bar with delay
+            setTimeout(() => {
+                loadingBar2.style.transition = 'width 1.5s ease-in-out';
+                loadingBar2.style.width = '40%';
+            }, 1000);
+
+            setTimeout(() => {
+                loadingBar2.style.transition = 'width 1s ease-in-out';
+                loadingBar2.style.width = '80%';
+            }, 2800);
+
+            setTimeout(() => {
+                loadingBar2.style.transition = 'width 0.7s ease-in-out';
+                loadingBar2.style.width = '100%';
+
+                setTimeout(() => {
+                    loadingBar2.style.opacity = '0';
+                }, 800);
+            }, 4000);
+
+            // Create particles for background
+            function createParticles() {
+                const particles = document.getElementById('particles');
+                const PARTICLE_COUNT = 30;
+
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'absolute';
+                    particle.style.width = Math.random() * 3 + 1 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+                    particle.style.borderRadius = '50%';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.8)';
+                    particle.style.filter = 'blur(' + Math.random() * 2 + 'px)';
+
+                    // Add animation
+                    particle.style.animation = `float ${Math.random() * 10 + 10}s linear infinite`;
+
+                    // Create and append keyframes
+                    const animationName = `float-${i}`;
+                    const keyframes = `
+              @keyframes ${animationName} {
+                0% {
+                  transform: translate(0, 0);
+                }
+                33% {
+                  transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px);
+                }
+                66% {
+                  transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px);
+                }
+                100% {
+                  transform: translate(0, 0);
+                }
+              }
+            `;
+
+                    const style = document.createElement('style');
+                    style.innerHTML = keyframes;
+                    document.head.appendChild(style);
+
+                    particle.style.animation = `${animationName} ${Math.random() * 20 + 20}s ease-in-out infinite`;
+
+                    particles.appendChild(particle);
+                }
+            }
+
+            createParticles();
+        });
+    </script>
+</body>
+
+</html>
